@@ -1,297 +1,349 @@
 <!doctype html>
 <html lang="ja">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>天陽会透析解析支援ツール</title>
-<style>
-:root{
-  --bg:#f6f8ff; --card:#ffffff; --accent:#5b6ef6; --accent2:#00b894; --muted:#6b7280;
-  --ok:#16a34a; --warn:#ef4444; --font: "Hiragino Kaku Gothic ProN","Meiryo","Yu Gothic",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-}
-*{box-sizing:border-box}
-html,body{margin:0;padding:0;background:var(--bg);font-family:var(--font);color:#0f172a}
-.container{max-width:920px;margin:12px auto;padding:14px}
-.header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
-.brand{display:flex;align-items:center;gap:12px}
-.logo{width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:20px;box-shadow:0 8px 20px rgba(91,110,246,0.12)}
-.title-block{line-height:1}
-.title{font-size:18px;font-weight:900}
-.subtitle{font-size:12px;color:var(--muted)}
-.controls{display:flex;gap:8px}
-.btn{background:linear-gradient(90deg,var(--accent),var(--accent2));border:none;color:#fff;padding:8px 12px;border-radius:10px;font-weight:700;cursor:pointer;box-shadow:0 6px 14px rgba(0,0,0,0.06)}
-.secondary{background:#fff;border:1px solid rgba(15,23,42,0.06);color:#0f172a;padding:8px 10px;border-radius:10px;cursor:pointer}
-.form{display:grid;grid-template-columns:1fr;gap:8px}
-.row{display:flex;gap:8px;align-items:center}
-.row label{width:110px;font-size:13px;color:var(--muted)}
-.row input, .row select{flex:1;padding:10px;border-radius:8px;border:1px solid rgba(15,23,42,0.06);font-size:15px;background:#fff}
-.small{font-size:12px;color:var(--muted)}
-.preview{margin-top:12px;background:var(--card);border-radius:12px;padding:12px;box-shadow:0 8px 20px rgba(15,23,42,0.04)}
-.table{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px}
-.table th,.table td{padding:8px;border-bottom:1px dashed rgba(15,23,42,0.04);text-align:left}
-.formula{font-size:12px;color:var(--muted);margin-top:8px}
-.advice{background:#fff8f9;border-left:4px solid var(--accent);padding:10px;border-radius:8px;margin-top:10px;font-size:13px}
-.badge{display:inline-block;padding:4px 8px;border-radius:999px;background:#e6f9f1;color:#0b6b3a;font-weight:700;font-size:12px;margin-left:8px}
-
-/* print header */
-.print-header{display:none}
-@page { size: A4 portrait; margin: 8mm; }
-@media print{
-  .controls, .no-print, .form input, .form select, .secondary, .btn, .clear-controls { display:none !important; }
-  .print-header{display:block;margin-bottom:6px}
-  .container{max-width:190mm;margin:0;padding:0}
-  .preview{background:transparent;box-shadow:none;padding:0;border:none}
-  .table th,.table td{font-size:11px;padding:6px}
-  .formula{font-size:10px}
-  .advice{padding:6px;font-size:11px}
-  body.print-fit { transform-origin: top left; transform: scale(0.88); }
-}
-
-/* responsive small screens */
-@media (max-width:640px){
-  .row{flex-direction:column;align-items:stretch}
-  .row label{width:100%;margin-bottom:6px}
-  .controls{flex-wrap:wrap}
-}
-.footer{font-size:12px;color:var(--muted);text-align:center;margin-top:12px}
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Tenyokai Dialysis Tool</title>
+  <style>
+    :root{
+      --ok:#0a7a07;
+      --warn:#d9534f;
+      --muted:#6c757d;
+      --badge:#e9f7ef;
+    }
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;margin:18px;color:#222}
+    .container{max-width:980px;margin:0 auto}
+    .grid{display:grid;grid-template-columns:1fr 360px;gap:18px}
+    .card{background:#fff;border:1px solid #e6e6e6;padding:12px;border-radius:8px;box-shadow:0 1px 2px rgba(0,0,0,0.03)}
+    label{display:block;font-size:13px;margin-bottom:6px;color:#333}
+    input[type="text"], input[type="number"], select{width:100%;padding:8px;border:1px solid #ddd;border-radius:6px;font-size:14px}
+    .row{display:flex;gap:8px}
+    .row > *{flex:1}
+    .table{width:100%;border-collapse:collapse;margin-top:8px}
+    .table th,.table td{border:1px solid #eee;padding:8px;text-align:left}
+    .badge{background:var(--badge);padding:4px 8px;border-radius:6px;font-weight:700}
+    .formula{font-size:13px;color:#444;margin-top:8px}
+    .advice{margin-top:8px;background:#fff8e6;padding:10px;border-radius:6px;border:1px solid #f0e0b8}
+    .muted{color:var(--muted)}
+    .btn{background:#0b5ed7;color:#fff;padding:8px 12px;border-radius:6px;border:none;cursor:pointer}
+    .btn:disabled{opacity:0.5;cursor:not-allowed}
+    #printTimestamp{font-size:12px;color:#666}
+    pre{background:#f8f9fa;padding:8px;border-radius:6px;overflow:auto}
+  </style>
 </head>
 <body>
-<div class="container">
-  <!-- header -->
-  <div class="header">
-    <div class="brand">
-      <div class="logo">天</div>
-      <div class="title-block">
-        <div class="title">天陽会透析解析支援ツール</div>
-        <div class="subtitle">作成者：CE（U）</div>
-      </div>
-    </div>
-    <div class="controls no-print">
-      <button class="btn" onclick="computeAll()">解析実行</button>
-      <button class="btn" onclick="fitPrintPreview()">プレビューをフィットして印刷</button>
-    </div>
-  </div>
-
-  <!-- print header (only printed) -->
-  <div class="print-header" id="printHeader">
-    <div style="font-weight:900;font-size:18px">天陽会透析解析支援ツール</div>
-    <div style="font-size:11px;color:#000;margin-top:4px">作成者：CE（U）　印刷日時: <span id="printTimestamp"></span></div>
-    <hr style="border:none;border-top:1px solid #ddd;margin:6px 0">
-  </div>
-
-  <!-- form -->
-  <div class="form card input-card no-print" style="padding:12px;margin-bottom:12px">
-    <div class="row"><label>ID</label><input id="patientId" type="text" placeholder="患者IDを入力" oninput="renderClearedBadge()" /></div>
-    <div class="row"><label>日付</label><input id="examDate" type="date" /></div>
-
-    <!-- required inputs for calculations -->
-    <div class="row"><label>K (mmol/L)</label><input id="K" type="number" step="0.1" /></div>
-    <div class="row"><label>Ca (mg/dL)</label><input id="Ca" type="number" step="0.1" /></div>
-    <div class="row"><label>Alb (g/dL)</label><input id="Alb" type="number" step="0.01" /></div>
-    <div class="row"><label>CRP (mg/dL)</label><input id="CRP" type="number" step="0.01" /></div>
-    <div class="row"><label>P (mg/dL)</label><input id="P" type="number" step="0.1" /></div>
-    <div class="row"><label>iPTH (pg/mL)</label><input id="iPTH" type="number" step="1" /></div>
-    <div class="row"><label>Hb (g/dL)</label><input id="Hb" type="number" step="0.1" /></div>
-    <div class="row"><label>Fe (μg/dL)</label><input id="Fe" type="number" step="0.1" /></div>
-    <div class="row"><label>TIBC (μg/dL)</label><input id="TIBC" type="number" step="0.1" /></div>
-    <div class="row"><label>フェリチン (ng/mL)</label><input id="Ferritin" type="number" step="1" /></div>
-    <div class="row"><label>BUN pre</label><input id="BUNpre" type="number" step="0.1" /></div>
-    <div class="row"><label>BUN post</label><input id="BUNpost" type="number" step="0.1" /></div>
-    <div class="row"><label>身長 (cm)</label><input id="height" type="number" step="0.1" /></div>
-    <div class="row"><label>透析前体重 (kg)</label><input id="weightPre" type="number" step="0.1" /></div>
-    <div class="row"><label>透析後体重 (kg)</label><input id="weightPost" type="number" step="0.1" /></div>
-    <div class="row"><label>透析時間 (hrs)</label><input id="dialysisTime" type="number" step="0.1" /></div>
-    <div class="row"><label>塩分摂取量 (g/day)</label><input id="salt" type="number" step="0.1" placeholder="任意" /></div>
-
-    <div style="display:flex;gap:8px;margin-top:8px" class="clear-controls">
-      <button class="secondary" onclick="clearInputs()">フォーム全クリア</button>
-      <button class="secondary" onclick="clearInputsForPatient()">この患者の入力をクリア</button>
-      <div id="clearedBadgeArea" style="margin-left:auto"></div>
-    </div>
-  </div>
-
-  <!-- preview -->
-  <div class="preview card preview-card" id="preview">
-    <div style="display:flex;justify-content:space-between;align-items:center">
+  <div class="container">
+    <h2>Tenyokai Dialysis Tool</h2>
+    <div class="grid">
       <div>
-        <div class="small">解析結果プレビュー</div>
-        <div id="patientHeader" style="margin-top:6px;font-weight:700">ID: 未入力  -  日付: 未入力</div>
+        <div class="card">
+          <div style="display:flex;gap:12px;align-items:center;justify-content:space-between">
+            <div>
+              <div id="patientHeader"><strong>ID:</strong> 未入力 - <strong>日付:</strong> 未入力</div>
+              <div id="printTimestamp" class="muted"></div>
+            </div>
+            <div>
+              <button id="runAnalyze" class="btn" type="button" disabled>解析実行</button>
+              <button id="printBtn" class="btn" style="background:#6c757d;margin-left:8px" type="button">印刷</button>
+            </div>
+          </div>
+
+          <hr style="margin:12px 0">
+
+          <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px">
+            <div>
+              <label for="patientId">患者ID</label>
+              <input id="patientId" type="text" placeholder="例: P12345">
+            </div>
+            <div>
+              <label for="examDate">日付</label>
+              <input id="examDate" type="text" placeholder="YYYY-MM-DD">
+            </div>
+
+            <div>
+              <label for="K">K (mmol/L)</label>
+              <input id="K" type="text" placeholder="例: 4.2">
+            </div>
+            <div>
+              <label for="Ca">Ca (mg/dL)</label>
+              <input id="Ca" type="text" placeholder="例: 8.6">
+            </div>
+
+            <div>
+              <label for="Alb">Alb (g/dL)</label>
+              <input id="Alb" type="text" placeholder="例: 3.8">
+            </div>
+            <div>
+              <label for="P">P (mg/dL)</label>
+              <input id="P" type="text" placeholder="例: 5.2">
+            </div>
+
+            <div>
+              <label for="iPTH">iPTH (pg/mL)</label>
+              <input id="iPTH" type="text" placeholder="例: 120">
+            </div>
+            <div>
+              <label for="Hb">Hb (g/dL)</label>
+              <input id="Hb" type="text" placeholder="例: 10.5">
+            </div>
+
+            <div>
+              <label for="Fe">Fe (μg/dL)</label>
+              <input id="Fe" type="text" placeholder="例: 60">
+            </div>
+            <div>
+              <label for="TIBC">TIBC (μg/dL)</label>
+              <input id="TIBC" type="text" placeholder="例: 300">
+            </div>
+
+            <div>
+              <label for="Ferritin">Ferritin (ng/mL)</label>
+              <input id="Ferritin" type="text" placeholder="例: 150">
+            </div>
+            <div>
+              <label for="TSAT">TSAT (%)</label>
+              <input id="TSAT" type="text" placeholder="自動計算" readonly>
+            </div>
+
+            <div>
+              <label for="BUNpre">BUN pre (mg/dL)</label>
+              <input id="BUNpre" type="text" placeholder="例: 60">
+            </div>
+            <div>
+              <label for="BUNpost">BUN post (mg/dL)</label>
+              <input id="BUNpost" type="text" placeholder="例: 20">
+            </div>
+
+            <div>
+              <label for="dialysisTime">透析時間 (分)</label>
+              <input id="dialysisTime" type="text" placeholder="例: 240">
+            </div>
+            <div>
+              <label for="UF">除水量 (kg)</label>
+              <input id="UF" type="text" placeholder="例: 2.0">
+            </div>
+
+            <div>
+              <label for="height">身長 (cm)</label>
+              <input id="height" type="text" placeholder="例: 160">
+            </div>
+            <div>
+              <label for="weightPre">体重(透析前) (kg)</label>
+              <input id="weightPre" type="text" placeholder="例: 60">
+            </div>
+
+            <div>
+              <label for="weightPost">体重(透析後) (kg)</label>
+              <input id="weightPost" type="text" placeholder="例: 58">
+            </div>
+            <div>
+              <label for="salt">塩分 (g/day)</label>
+              <input id="salt" type="text" placeholder="例: 6">
+            </div>
+          </div>
+        </div>
+
+        <div id="tableArea" class="card" style="margin-top:12px">
+          <!-- 結果テーブルがここに入る -->
+        </div>
+
+        <div id="formulaArea" class="card" style="margin-top:12px">
+          <!-- 計算式表示 -->
+        </div>
+
+        <div id="adviceArea" class="card" style="margin-top:12px">
+          <!-- 臨床アドバイス -->
+        </div>
       </div>
-      <div class="small">A4印刷対応（縦1枚）</div>
+
+      <div>
+        <div class="card">
+          <h4>OCR / 外部入力</h4>
+          <p class="muted">外部アプリから JSON を渡す場合は receiveOCRData(json) を呼び出してください。</p>
+          <pre id="ocrSample">
+{
+  "patientId":"P123",
+  "examDate":"2026-01-06",
+  "K":"4.2",
+  "Ca":"8.6",
+  "Alb":"3.8",
+  "P":"5.2",
+  "iPTH":"120",
+  "Hb":"10.5",
+  "Fe":"60",
+  "TIBC":"300",
+  "Ferritin":"150",
+  "BUNpre":"60",
+  "BUNpost":"20",
+  "height":"160",
+  "weightPre":"60",
+  "weightPost":"58",
+  "dialysisTime":"240",
+  "salt":"6"
+}
+          </pre>
+          <div style="margin-top:8px">
+            <button id="fillSample" class="btn" type="button">サンプルを入力</button>
+            <button id="clearBtn" class="btn" style="background:#d9534f;margin-left:8px" type="button">クリア</button>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:12px">
+          <h4>メモ</h4>
+          <p class="muted">補正Ca、TSAT、spKt/V、GNRI、nPCR などを自動計算して判定・アドバイスを表示します。</p>
+        </div>
+      </div>
     </div>
-
-    <div id="summaryArea" style="margin-top:10px"></div>
-    <div id="tableArea"></div>
-    <div id="formulaArea"></div>
-    <div id="adviceArea"></div>
   </div>
-
-  <div class="footer">印刷時は印刷ダイアログで「ヘッダ/フッタをオフ」「余白を最小」にしてください。</div>
-</div>
 
 <script>
-/* utilities */
-function toNum(v){ return v===''||v===null||v===undefined?NaN: Number(v); }
-function isNum(v){ return !isNaN(v) && isFinite(v); }
+  // utility
+  function isNum(v){ if(v===null||v===undefined) return false; const n = Number(String(v).replace(/,/g,'.')); return !isNaN(n) && isFinite(n); }
+  function toNum(v){ return isNum(v) ? Number(String(v).replace(/,/g,'.')) : null; }
 
-/* localStorage keys */
-const LS_CLEARED = 'tenyokai_cleared_map_v3';
-
-/* cleared map helpers */
-function getClearedMap(){ try{ return JSON.parse(localStorage.getItem(LS_CLEARED) || '{}'); }catch(e){ return {}; } }
-function setClearedMap(m){ localStorage.setItem(LS_CLEARED, JSON.stringify(m)); }
-
-/* render cleared badge */
-function renderClearedBadge(){
-  const id = (document.getElementById('patientId').value || '').trim();
-  const area = document.getElementById('clearedBadgeArea');
-  area.innerHTML = '';
-  if(!id) return;
-  const map = getClearedMap();
-  if(map[id] && map[id].cleared){
-    const span = document.createElement('span'); span.className='badge'; span.textContent='クリア済';
-    const btn = document.createElement('button'); btn.className='secondary'; btn.style.marginLeft='8px'; btn.textContent='クリア解除';
-    btn.onclick = ()=>{ if(confirm('クリアフラグを解除しますか？')){ delete map[id]; setClearedMap(map); renderClearedBadge(); alert('クリア解除しました。'); } };
-    area.appendChild(span); area.appendChild(btn);
-  } else {
-    const span = document.createElement('span'); span.className='small'; span.textContent='未クリア';
-    area.appendChild(span);
+  // localStorage helpers for cleared badge
+  function getClearedMap(){
+    try{
+      const s = localStorage.getItem('clearedMap');
+      return s ? JSON.parse(s) : {};
+    }catch(e){ return {}; }
   }
-}
-
-/* clear all inputs */
-function clearInputs(){
-  const ids=['patientId','examDate','K','Ca','Alb','CRP','P','iPTH','Hb','Fe','TIBC','Ferritin','BUNpre','BUNpost','height','weightPre','weightPost','dialysisTime','salt'];
-  ids.forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
-  document.getElementById('summaryArea').innerHTML=''; document.getElementById('tableArea').innerHTML=''; document.getElementById('formulaArea').innerHTML=''; document.getElementById('adviceArea').innerHTML='';
-  document.getElementById('patientHeader').textContent='ID: 未入力  -  日付: 未入力';
-  renderClearedBadge();
-}
-
-/* clear inputs for current patient */
-function clearInputsForPatient(){
-  const id = (document.getElementById('patientId').value || '').trim();
-  if(!id){ alert('まずIDを入力してください。'); return; }
-  if(!confirm(`患者 ${id} の入力を一斉にクリアします。よろしいですか？`)) return;
-  const ids=['K','Ca','Alb','CRP','P','iPTH','Hb','Fe','TIBC','Ferritin','BUNpre','BUNpost','height','weightPre','weightPost','dialysisTime','salt'];
-  ids.forEach(idn=>{ const el=document.getElementById(idn); if(el) el.value=''; });
-  const map = getClearedMap(); map[id] = {cleared:true, ts: new Date().toISOString()}; setClearedMap(map);
-  renderClearedBadge();
-  computeAll();
-  alert('この患者の入力をクリアしました（クリアフラグを保存）。');
-}
-
-/* main compute */
-function computeAll(){
-  const id = (document.getElementById('patientId').value || '').trim();
-  const date = document.getElementById('examDate').value || '-';
-  const K = toNum(document.getElementById('K').value);
-  const Ca = toNum(document.getElementById('Ca').value);
-  const Alb = toNum(document.getElementById('Alb').value);
-  const CRP = toNum(document.getElementById('CRP').value);
-  const P = toNum(document.getElementById('P').value);
-  const iPTH = toNum(document.getElementById('iPTH').value);
-  const Hb = toNum(document.getElementById('Hb').value);
-  const Fe = toNum(document.getElementById('Fe').value);
-  const TIBC = toNum(document.getElementById('TIBC').value);
-  const Ferritin = toNum(document.getElementById('Ferritin').value);
-  const BUNpre = toNum(document.getElementById('BUNpre').value);
-  const BUNpost = toNum(document.getElementById('BUNpost').value);
-  const height = toNum(document.getElementById('height').value);
-  const weightPre = toNum(document.getElementById('weightPre').value);
-  const weightPost = toNum(document.getElementById('weightPost').value);
-  const dialysisTime = toNum(document.getElementById('dialysisTime').value);
-  const salt = toNum(document.getElementById('salt').value);
-
-  // UF
-  let UF = NaN;
-  if(isNum(weightPre) && isNum(weightPost)) UF = weightPre - weightPost;
-
-  // TSAT
-  let TSAT = NaN;
-  if(isNum(Fe) && isNum(TIBC) && TIBC !== 0) TSAT = (Fe / TIBC) * 100;
-
-  // spKt/V (Daugirdas simplified)
-  let spKtV = NaN;
-  if(isNum(BUNpre) && isNum(BUNpost) && isNum(dialysisTime) && isNum(UF) && isNum(weightPost) && BUNpre>0 && weightPost>0){
-    const R = BUNpost / BUNpre;
-    const term = R - 0.008 * dialysisTime;
-    if(term > 0) spKtV = -Math.log(term) + (4 - 3.5 * R) * (UF / weightPost);
+  function setCleared(id, val){
+    const m = getClearedMap();
+    m[id] = {cleared: !!val, ts: Date.now()};
+    localStorage.setItem('clearedMap', JSON.stringify(m));
   }
 
-  // corrected Ca
-  let correctedCa = NaN;
-  if(isNum(Ca) && isNum(Alb)) correctedCa = Ca + 0.8 * (4.0 - Alb);
-
-  // nPCR estimation
-  let nPCR = NaN;
-  if(isNum(BUNpre) && isNum(BUNpost) && isNum(dialysisTime) && isNum(weightPre) && dialysisTime>0){
-    const V = weightPre * 0.6;
-    const G = 0.0136 * Math.max(0, (BUNpre - BUNpost)) * V / dialysisTime;
-    nPCR = (G * 1000) / weightPre;
+  function renderClearedBadge(){
+    const id = document.getElementById('patientId')?.value || '';
+    const map = getClearedMap();
+    const el = document.getElementById('patientHeader');
+    if(!el) return;
+    let html = `ID: ${id || '未入力'}  -  日付: ${document.getElementById('examDate')?.value || '未入力'}`;
+    if(id && map[id] && map[id].cleared){
+      html += ' <span class="badge">クリア済</span>';
+    }
+    el.innerHTML = html;
   }
 
-  // GNRI
-  let GNRI = NaN;
-  if(isNum(height) && isNum(weightPre) && isNum(Alb) && height>0){
-    const h = height / 100;
-    const idealW
-    const idealW
-    = 22 * (height/100) * (height/100);
-    if(isNum(weightPre) && isNum(Alb) && isNum(height) && height>0){
-      GNRI = 14.89 * Alb + 41.7 * (weightPre / idealW);
+  // main compute function
+  function computeAll(){
+    // read inputs
+    const id = document.getElementById('patientId')?.value || '';
+    const date = document.getElementById('examDate')?.value || '';
+    const K = toNum(document.getElementById('K')?.value);
+    const Ca = toNum(document.getElementById('Ca')?.value);
+    const Alb = toNum(document.getElementById('Alb')?.value);
+    const P = toNum(document.getElementById('P')?.value);
+    const iPTH = toNum(document.getElementById('iPTH')?.value);
+    const Hb = toNum(document.getElementById('Hb')?.value);
+    const Fe = toNum(document.getElementById('Fe')?.value);
+    const TIBC = toNum(document.getElementById('TIBC')?.value);
+    const Ferritin = toNum(document.getElementById('Ferritin')?.value);
+    const BUNpre = toNum(document.getElementById('BUNpre')?.value);
+    const BUNpost = toNum(document.getElementById('BUNpost')?.value);
+    const dialysisTime = toNum(document.getElementById('dialysisTime')?.value);
+    const UF = toNum(document.getElementById('UF')?.value);
+    const height = toNum(document.getElementById('height')?.value);
+    const weightPre = toNum(document.getElementById('weightPre')?.value);
+    const weightPost = toNum(document.getElementById('weightPost')?.value);
+    const salt = toNum(document.getElementById('salt')?.value);
+
+    // corrected Ca
+    let correctedCa = null;
+    if(isNum(Ca) && isNum(Alb)){
+      correctedCa = Ca + 0.8 * (4.0 - Alb);
     }
 
-    // summary and status helpers
+    // TSAT
+    let TSAT = null;
+    if(isNum(Fe) && isNum(TIBC) && TIBC !== 0){
+      TSAT = (Fe / TIBC) * 100;
+      document.getElementById('TSAT').value = TSAT.toFixed(1);
+    } else {
+      document.getElementById('TSAT').value = '';
+    }
+
+    // spKtV (簡易 Daugirdas)
+    let spKtV = null;
+    if(isNum(BUNpre) && isNum(BUNpost) && isNum(dialysisTime) && dialysisTime>0 && isNum(UF) && isNum(weightPre) && weightPre>0){
+      const t = dialysisTime / 60; // hours
+      const R = BUNpost / BUNpre;
+      // simplified formula (approx)
+      try{
+        spKtV = -Math.log(R - 0.008 * t) + (4 - 3.5 * R) * (UF / weightPre);
+      }catch(e){
+        spKtV = null;
+      }
+    }
+
+    // nPCR (簡易推定) - placeholder: not a precise calc
+    let nPCR = null;
+    if(isNum(BUNpre) && isNum(BUNpost) && isNum(weightPre) && weightPre>0){
+      // very rough estimate: higher BUNpre suggests higher protein intake; this is illustrative only
+      nPCR = Math.max(0.5, Math.min(1.6, (BUNpre / 60) * 1.2));
+    }
+
+    // GNRI
+    let GNRI = null;
+    if(isNum(Alb) && isNum(height) && isNum(weightPre) && height>0){
+      const idealW = 22 * (height/100) * (height/100);
+      GNRI = 14.89 * (Alb * 10) / 10; // Alb is g/dL; original formula uses g/L; keep consistent
+      // use original style: GNRI = 1.489 * Alb(g/L) + 41.7 * (体重 / 理想体重)
+      // Alb(g/L) = Alb(g/dL) * 10
+      GNRI = 1.489 * (Alb * 10) + 41.7 * (weightPre / idealW);
+    }
+
+    // prepare results
+    const results = {
+      K: isNum(K) ? K : null,
+      correctedCa: isNum(correctedCa) ? Number(correctedCa.toFixed(2)) : null,
+      P: isNum(P) ? P : null,
+      iPTH: isNum(iPTH) ? iPTH : null,
+      Hb: isNum(Hb) ? Hb : null,
+      TSAT: isNum(TSAT) ? Number(TSAT.toFixed(1)) : null,
+      Ferritin: isNum(Ferritin) ? Ferritin : null,
+      spKtV: isNum(spKtV) ? Number(spKtV.toFixed(3)) : null,
+      UF: isNum(UF) ? Number(UF.toFixed(2)) : null,
+      nPCR: isNum(nPCR) ? Number(nPCR.toFixed(2)) : null,
+      GNRI: isNum(GNRI) ? Number(GNRI.toFixed(1)) : null,
+      Alb: isNum(Alb) ? Alb : null,
+      salt: isNum(salt) ? salt : null
+    };
+
+    // checks
+    const checks = {
+      K: results.K !== null ? (results.K >= 3.5 && results.K <= 5.5) : null,
+      spKtV: results.spKtV !== null ? (results.spKtV >= 1.6) : null,
+      Hb: results.Hb !== null ? (results.Hb >= 10 && results.Hb <= 12) : null,
+      TSAT: results.TSAT !== null ? (results.TSAT >= 20) : null,
+      Ferritin: results.Ferritin !== null ? (results.Ferritin >= 100 && results.Ferritin <= 300) : null,
+      P: results.P !== null ? (results.P >= 3.5 && results.P <= 6.0) : null,
+      correctedCa: results.correctedCa !== null ? (results.correctedCa >= 8.4 && results.correctedCa <= 10.0) : null,
+      iPTH: results.iPTH !== null ? (results.iPTH >= 60 && results.iPTH <= 240) : null,
+      nutrition_salt: results.salt !== null ? (results.salt < 6) : null,
+      nPCR: results.nPCR !== null ? (results.nPCR >= 0.9 && results.nPCR <= 1.2) : null,
+      GNRI: results.GNRI !== null ? (results.GNRI >= 92) : null,
+      Alb: results.Alb !== null ? (results.Alb >= 3.5) : null
+    };
+
     function statusLabel(ok){
       if(ok === true) return `<span style="color:var(--ok);font-weight:800">OK</span>`;
       if(ok === false) return `<span style="color:var(--warn);font-weight:800">要対応</span>`;
       return `<span style="color:var(--muted)">未入力</span>`;
     }
 
-    // evaluate targets
-    const results = {};
-    results.K = isNum(K) ? K : null;
-    results.correctedCa = isNum(correctedCa) ? Number(correctedCa.toFixed(2)) : null;
-    results.P = isNum(P) ? P : null;
-    results.iPTH = isNum(iPTH) ? iPTH : null;
-    results.Hb = isNum(Hb) ? Hb : null;
-    results.TSAT = isNum(TSAT) ? Number(TSAT.toFixed(1)) : null;
-    results.Ferritin = isNum(Ferritin) ? Ferritin : null;
-    results.spKtV = isNum(spKtV) ? Number(spKtV.toFixed(3)) : null;
-    results.UF = isNum(UF) ? Number(UF.toFixed(2)) : null;
-    results.nPCR = isNum(nPCR) ? Number(nPCR.toFixed(2)) : null;
-    results.GNRI = isNum(GNRI) ? Number(GNRI.toFixed(1)) : null;
-    results.Alb = isNum(Alb) ? Alb : null;
-    results.salt = isNum(salt) ? salt : null;
-
-    // determine OK / warn based on your thresholds
-    const checks = {};
-    checks.K = results.K !== null ? (results.K >= 3.5 && results.K <= 5.5) : null;
-    checks.spKtV = results.spKtV !== null ? (results.spKtV >= 1.6) : null;
-    checks.Hb = results.Hb !== null ? (results.Hb >= 10 && results.Hb <= 12) : null;
-    checks.TSAT = results.TSAT !== null ? (results.TSAT >= 20) : null;
-    checks.Ferritin = results.Ferritin !== null ? (results.Ferritin >= 100 && results.Ferritin <= 300) : null;
-    checks.P = results.P !== null ? (results.P >= 3.5 && results.P <= 6.0) : null;
-    checks.correctedCa = results.correctedCa !== null ? (results.correctedCa >= 8.4 && results.correctedCa <= 10.0) : null;
-    checks.iPTH = results.iPTH !== null ? (results.iPTH >= 60 && results.iPTH <= 240) : null;
-    checks.nutrition_salt = results.salt !== null ? (results.salt < 6) : null;
-    checks.nPCR = results.nPCR !== null ? (results.nPCR >= 0.9 && results.nPCR <= 1.2) : null;
-    checks.GNRI = results.GNRI !== null ? (results.GNRI >= 92) : null;
-    checks.Alb = results.Alb !== null ? (results.Alb >= 3.5) : null;
-
-    // build summary HTML
+    // build summary
     const summaryParts = [];
     summaryParts.push(`<div style="display:flex;gap:12px;flex-wrap:wrap">`);
     summaryParts.push(`<div><strong>ID:</strong> ${id || '未入力'}</div>`);
-    summaryParts.push(`<div><strong>日付:</strong> ${date}</div>`);
+    summaryParts.push(`<div><strong>日付:</strong> ${date || '未入力'}</div>`);
     if(getClearedMap()[id] && getClearedMap()[id].cleared){
       summaryParts.push(`<div><span class="badge">クリア済</span></div>`);
     }
     summaryParts.push(`</div>`);
 
-    // table of values
+    // table
     let tableHtml = `<table class="table"><thead><tr><th>項目</th><th>値</th><th>判定</th></tr></thead><tbody>`;
     tableHtml += `<tr><td>K (mmol/L)</td><td>${results.K !== null ? results.K : '未入力'}</td><td>${statusLabel(checks.K)}</td></tr>`;
     tableHtml += `<tr><td>補正Ca (mg/dL)</td><td>${results.correctedCa !== null ? results.correctedCa : '未入力'}</td><td>${statusLabel(checks.correctedCa)}</td></tr>`;
@@ -308,13 +360,13 @@ function computeAll(){
     tableHtml += `<tr><td>塩分 (g/day)</td><td>${results.salt !== null ? results.salt : '未入力'}</td><td>${statusLabel(checks.nutrition_salt)}</td></tr>`;
     tableHtml += `</tbody></table>`;
 
-    // formula area
+    // formula
     let formulaHtml = `<div class="formula"><strong>計算式</strong><div>補正Ca = Ca + 0.8 × (4.0 − Alb)</div>`;
     formulaHtml += `<div>TSAT = Fe / TIBC × 100</div>`;
     formulaHtml += `<div>spKt/V (簡易 Daugirdas) = −ln(BUNpost/BUNpre − 0.008×t) + (4 − 3.5×(BUNpost/BUNpre)) × (UF / 体重)</div>`;
     formulaHtml += `<div>GNRI = 1.489 × Alb(g/L) + 41.7 × (体重 / 理想体重)</div></div>`;
 
-    // advice generation (simple rule-based)
+    // advice
     const adv = [];
     if(checks.spKtV === false) adv.push('spKt/V が目標未達です。透析時間延長や血流量増加を検討してください。');
     if(checks.Hb === false) {
@@ -332,31 +384,35 @@ function computeAll(){
 
     if(adv.length === 0) adv.push('全体的に目標範囲内です。現行治療を継続してください。');
 
-    // render to DOM
-    document.getElementById('patientHeader').textContent = `ID: ${id || '未入力'}  -  日付: ${date}`;
-    document.getElementById('summaryArea').innerHTML = summaryParts.join('');
-    document.getElementById('tableArea').innerHTML = tableHtml;
+    // render
+    document.getElementById('patientHeader').textContent = `ID: ${id || '未入力'}  -  日付: ${date || '未入力'}`;
+    document.getElementById('tableArea').innerHTML = summaryParts.join('') + tableHtml;
     document.getElementById('formulaArea').innerHTML = formulaHtml;
     document.getElementById('adviceArea').innerHTML = `<div class="advice"><strong>臨床アドバイス</strong><ul style="margin:8px 0 0 18px;padding:0">${adv.map(a=>`<li>${a}</li>`).join('')}</ul></div>`;
+
+    // mark cleared if all OK
+    const allOk = Object.keys(checks).every(k => checks[k] === true || checks[k] === null);
+    if(id && allOk) setCleared(id, true);
+
+    renderClearedBadge();
   }
 
-  // fit print preview and print
+  // print helper
   function fitPrintPreview(){
     const ts = new Date();
     document.getElementById('printTimestamp').textContent = ts.toLocaleString();
-    // optional: small delay to ensure DOM updates
     setTimeout(()=>{ window.print(); }, 200);
   }
 
-  // receive OCR data from external app (expects JSON object)
+  // receive OCR JSON
   function receiveOCRData(json){
     try{
-      // example expected keys: patientId, examDate, K, Ca, Alb, P, iPTH, Hb, Fe, TIBC, Ferritin, BUNpre, BUNpost, height, weightPre, weightPost, dialysisTime, salt
       const data = typeof json === 'string' ? JSON.parse(json) : json;
-      const keys = ['patientId','examDate','K','Ca','Alb','CRP','P','iPTH','Hb','Fe','TIBC','Ferritin','BUNpre','BUNpost','height','weightPre','weightPost','dialysisTime','salt'];
+      const keys = ['patientId','examDate','K','Ca','Alb','CRP','P','iPTH','Hb','Fe','TIBC','Ferritin','BUNpre','BUNpost','height','weightPre','weightPost','dialysisTime','salt','UF'];
       keys.forEach(k=>{
-        if(data[k] !== undefined && document.getElementById(k)){
-          document.getElementById(k).value = data[k];
+        if(data[k] !== undefined){
+          const el = document.getElementById(k);
+          if(el) el.value = data[k];
         }
       });
       renderClearedBadge();
@@ -367,21 +423,91 @@ function computeAll(){
     }
   }
 
-  // attach simple input listeners for live feedback
-  const inputs = ['K','Ca','Alb','CRP','P','iPTH','Hb','Fe','TIBC','Ferritin','BUNpre','BUNpost','height','weightPre','weightPost','dialysisTime','salt','patientId','examDate'];
-  inputs.forEach(id=>{
-    const el = document.getElementById(id);
-    if(el) el.addEventListener('change', ()=>{ renderClearedBadge(); });
-  });
+  // expose to global for WKWebView etc.
+  window.receiveOCRData = receiveOCRData;
+  window.computeAll = computeAll;
 
-  // initial render
+  // attach simple listeners
   window.addEventListener('load', ()=>{
     renderClearedBadge();
-    // do not auto-run compute to avoid accidental calculations; user can click 解析実行
+    // do not auto-run computeAll to avoid accidental calculations
   });
 
-  // expose receiveOCRData to global (for WKWebView)
-  window.receiveOCRData = receiveOCRData;
+  // sample fill and clear buttons
+  document.getElementById('fillSample')?.addEventListener('click', ()=>{
+    try{
+      const sample = JSON.parse(document.getElementById('ocrSample').textContent);
+      receiveOCRData(sample);
+    }catch(e){ console.error(e); }
+  });
+  document.getElementById('clearBtn')?.addEventListener('click', ()=>{
+    ['patientId','examDate','K','Ca','Alb','P','iPTH','Hb','Fe','TIBC','Ferritin','BUNpre','BUNpost','height','weightPre','weightPost','dialysisTime','salt','UF','TSAT'].forEach(id=>{
+      const el = document.getElementById(id);
+      if(el) el.value = '';
+    });
+    renderClearedBadge();
+    document.getElementById('tableArea').innerHTML = '';
+    document.getElementById('formulaArea').innerHTML = '';
+    document.getElementById('adviceArea').innerHTML = '';
+  });
+
+  // print button
+  document.getElementById('printBtn')?.addEventListener('click', fitPrintPreview);
+</script>
+
+<!-- 以下はボタン有効化とイベント登録の補助スクリプト（必ず computeAll が定義された後に実行されるように末尾に配置） -->
+<script>
+  document.addEventListener('DOMContentLoaded', function(){
+    const runBtn = document.getElementById('runAnalyze');
+
+    // expose computeAll if present
+    if(typeof computeAll === 'function') window.computeAll = computeAll;
+
+    function inputsAreValid(){
+      const ids = ['K','Ca','Alb','height']; // 必須項目
+      for(const id of ids){
+        const el = document.getElementById(id);
+        if(!el) return false;
+        const v = el.value.trim();
+        if(v === '' || isNaN(Number(String(v).replace(/,/g,'.')))) return false;
+      }
+      return true;
+    }
+
+    function updateButtonState(){
+      try{
+        if(!runBtn) return;
+        runBtn.disabled = !inputsAreValid();
+      }catch(e){
+        console.error('updateButtonState error', e);
+        if(runBtn) runBtn.disabled = false;
+      }
+    }
+
+    if(runBtn){
+      runBtn.addEventListener('click', function(){
+        try{
+          console.log('解析実行ボタンが押されました');
+          computeAll && computeAll();
+        }catch(err){
+          console.error('computeAll 実行中にエラー:', err);
+          alert('解析中にエラーが発生しました。コンソールのエラーを確認してください。');
+        }
+      });
+    }
+
+    const watchIds = ['K','Ca','Alb','height','patientId','examDate','BUNpre','BUNpost','dialysisTime','UF'];
+    watchIds.forEach(id=>{
+      const el = document.getElementById(id);
+      if(el) el.addEventListener('input', updateButtonState);
+    });
+
+    // 初期更新
+    updateButtonState();
+
+    // デバッグ用メッセージ
+    console.log('runAnalyze ready. To force run from console: computeAll()');
+  });
 </script>
 </body>
 </html>
