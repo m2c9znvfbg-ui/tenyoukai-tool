@@ -4,20 +4,21 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>天陽会透析解析支援ツール Clinical Full</title>
-
 <style>
-body{font-family:"Noto Sans JP",system-ui;margin:0;padding:14px;background:#f4f6f9}
+body{font-family:"Noto Sans JP",system-ui;margin:0;padding:14px;background:#f4f6f9;color:#0b1220;}
 .wrap{max-width:1100px;margin:auto}
 .card{background:#fff;padding:14px;border-radius:12px;margin-bottom:14px;box-shadow:0 4px 14px rgba(0,0,0,0.05)}
 .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:8px}
 input{width:100%;padding:8px;border-radius:8px;border:1px solid #e5e7eb}
 button{padding:10px;border-radius:8px;border:none;background:#0b5ed7;color:#fff;font-weight:700;width:100%;margin-top:8px}
 button.secondary{background:#e5e7eb;color:#333}
 table{width:100%;border-collapse:collapse;margin-top:10px}
-th,td{border-bottom:1px solid #eee;padding:6px;font-size:13px}
+th,td{border-bottom:1px solid #eee;padding:6px;font-size:13px;text-align:left}
 .ok{color:#0f9d58;font-weight:700}
 .warn{color:#d9534f;font-weight:700}
 .comment{background:#eef6ff;padding:10px;border-radius:8px;margin-top:10px;font-size:13px}
+.headerInfo{font-size:13px;margin-bottom:6px;color:#555}
 @media print{button{display:none}body{background:#fff}}
 </style>
 </head>
@@ -27,6 +28,11 @@ th,td{border-bottom:1px solid #eee;padding:6px;font-size:13px}
 
 <div class="card">
 <h2>天陽会透析解析支援ツール Clinical Full</h2>
+
+<div class="grid-2">
+<input id="patientId" placeholder="患者ID">
+<input type="date" id="examDate">
+</div>
 
 <div class="grid-3">
 <input id="K" placeholder="K (mmol/L)">
@@ -44,9 +50,11 @@ th,td{border-bottom:1px solid #eee;padding:6px;font-size:13px}
 <input id="UF" placeholder="除水量">
 <input id="height" placeholder="身長(cm)">
 <input id="weightPre" placeholder="透析前体重">
+<input id="weightPost" placeholder="透析後体重">
+<input id="idwg" placeholder="IDWG(kg)">
 <input id="urineNa" placeholder="尿Na (mEq/L)">
 <input id="urineVol" placeholder="尿量(L)">
-<input id="idwg" placeholder="IDWG(kg)">
+<input id="saltManual" placeholder="塩分手入力(g/day)">
 </div>
 
 <button onclick="calc()">解析実行</button>
@@ -65,6 +73,9 @@ const clamp=(v,min,max)=>Math.max(min,Math.min(max,v))
 
 function calc(){
 
+const patientId=el("patientId").value
+const examDate=el("examDate").value
+
 const K=num(el("K").value)
 const Ca=num(el("Ca").value)
 const Alb=num(el("Alb").value)
@@ -80,13 +91,19 @@ const dialysisTime=num(el("dialysisTime").value)
 const UF=num(el("UF").value)
 const height=num(el("height").value)
 const weightPre=num(el("weightPre").value)
+const weightPost=num(el("weightPost").value)
+const idwg=num(el("idwg").value)
 const urineNa=num(el("urineNa").value)
 const urineVol=num(el("urineVol").value)
-const idwg=num(el("idwg").value)
+const saltManual=num(el("saltManual").value)
 
+// 補正Ca
 const correctedCa=(Ca&&Alb)?(Ca+0.8*(4.0-Alb)):null
+
+// TSAT
 const TSAT=(Fe&&TIBC)?((Fe/TIBC)*100):null
 
+// spKt/V (Daugirdas)
 let spKtV=null
 if(BUNpre&&BUNpost&&dialysisTime&&UF&&weightPre){
 const t=dialysisTime/60
@@ -94,34 +111,38 @@ const R=BUNpost/BUNpre
 if(R>0) spKtV=(-Math.log(R-0.008*t)+(4-3.5*R)*(UF/weightPre))
 }
 
+// nPCR
 const nPCR=BUNpre?clamp((BUNpre/60)*1.2,0.5,1.6):null
 
+// GNRI
 let GNRI=null
 if(Alb&&height&&weightPre){
 const ideal=22*(height/100)*(height/100)
 GNRI=1.489*(Alb*10)+41.7*(weightPre/ideal)
 }
 
-let saltUrine=null
-if(urineNa&&urineVol){
-const Na_mg=urineNa*urineVol*23
-saltUrine=Na_mg/1000*2.54
-}
+// 塩分
+let salt=null
+let saltSource="未推定"
+if(saltManual){salt=saltManual;saltSource="手入力"}
+else if(urineNa&&urineVol){salt=(urineNa*urineVol*23/1000*2.54).toFixed(2);saltSource="尿データ推定"}
+else if(idwg){salt=(3+4*idwg).toFixed(2);saltSource="IDWG推定(目安)"}
 
-let saltIDWG=idwg?(3+4*idwg):null
-
+// 判定
 function judge(val,min,max){
-if(val==null) return ""
-if(min!=null&&val<min) return "warn"
-if(max!=null&&val>max) return "warn"
-return "ok"
+if(val==null)return""
+if(min!=null&&val<min)return"warn"
+if(max!=null&&val>max)return"warn"
+return"ok"
 }
 
-let html="<table><tr><th>項目</th><th>値</th><th>目標</th></tr>"
+let html=`<div class="headerInfo"><b>患者ID:</b> ${patientId||"—"}　<b>日付:</b> ${examDate||"—"}</div>`
+html+="<table><tr><th>項目</th><th>値</th><th>目標</th><th>判定</th></tr>"
 
 function row(name,val,target,min,max){
 const cls=judge(val,min,max)
-return `<tr class="${cls}"><td>${name}</td><td>${val!=null?val.toFixed?val.toFixed(2):val:"—"}</td><td>${target}</td></tr>`
+const label=cls==="ok"?'<span class="ok">OK</span>':cls==="warn"?'<span class="warn">要対応</span>':'<span>未入力</span>'
+return `<tr class="${cls}"><td>${name}</td><td>${val!=null? (typeof val==="number"?val.toFixed(2):val):"—"}</td><td>${target}</td><td>${label}</td></tr>`
 }
 
 html+=row("spKt/V",spKtV,"≥1.4",1.4,null)
@@ -134,32 +155,33 @@ html+=row("補正Ca",correctedCa,"8.4–9.5",8.4,9.5)
 html+=row("iPTH",iPTH,"60–240",60,240)
 html+=row("nPCR",nPCR,"0.5–1.6",0.5,1.6)
 html+=row("GNRI",GNRI,"≥92",92,null)
-html+=row("尿塩分推定",saltUrine,"参考",null,null)
-html+=row("IDWG塩分推定",saltIDWG,"参考",null,null)
+html+=row("塩分推定",salt,saltSource,null,null)
 
 html+="</table>"
 
-let advice=""
+// ガイドライン準拠アドバイス
+let adv=[]
+if(spKtV!==null&&spKtV<1.4) adv.push("spKt/V が目標未達です。透析時間延長やアクセス評価を検討。")
+if(Hb!==null&&(Hb<10||Hb>12)) adv.push("Hbが目標範囲外。ESA・鉄補充・出血・炎症評価。")
+if(TSAT!==null&&TSAT<20 || Ferritin!==null&&(Ferritin<100||Ferritin>300)) adv.push("鉄代謝指標が目標外。鉄補充の必要性を検討。")
+if(P!==null&&(P<3.5||P>5.5)) adv.push("リンが目標外。食事指導やリン吸着薬の調整。")
+if(correctedCa!==null&&(correctedCa<8.4||correctedCa>9.5) || iPTH!==null&&(iPTH<60||iPTH>240)) adv.push("MBD指標が目標外。薬剤やビタミンD調整。")
+if(nPCR!==null&&(nPCR<0.5||nPCR>1.6) || GNRI!==null&&GNRI<92 || Alb!==null&&Alb<3.5) adv.push("栄養指標が不良。栄養士評価・介入。")
+if(K!==null&&(K<3.5||K>5.5)) adv.push("カリウムが目標外。食事指導・透析条件見直し。")
+if(salt!==null&&salt>6) adv.push("塩分摂取が目標を超えています。食事指導で制限。")
 
-if(spKtV&&spKtV<1.4) advice+="・透析量不足。透析時間延長または血流量増加を検討。<br>"
-if(Hb&&Hb<10) advice+="・Hb低値。ESA投与量および鉄状態評価を検討。<br>"
-if(TSAT&&TSAT<20) advice+="・TSAT低値。鉄補充検討。<br>"
-if(Ferritin&&Ferritin<100) advice+="・Ferritin低値。鉄不足の可能性。<br>"
-if(Ferritin&&Ferritin>300) advice+="・Ferritin高値。炎症評価を検討。<br>"
-if(P&&P>5.5) advice+="・高リン血症。リン吸着薬調整および食事指導。<br>"
-if(correctedCa&&correctedCa>9.5) advice+="・高Ca血症。Ca製剤・VitD製剤調整。<br>"
-if(iPTH&&iPTH>240) advice+="・副甲状腺機能亢進。VitDまたはCalcimimetic検討。<br>"
-if(K&&K>5.5) advice+="・高K血症。食事内容および透析条件見直し。<br>"
-if(GNRI&&GNRI<92) advice+="・栄養リスクあり。栄養介入検討。<br>"
-if(saltUrine&&saltUrine>=6) advice+="・塩分摂取過多の可能性。減塩指導。<br>"
-
-if(advice){
-html+=`<div class="comment"><b>ガイドライン準拠コメント</b><br>${advice}</div>`
+if(adv.length>0){
+html+=`<div class="comment"><b>アドバイス</b><ul>`+adv.map(a=>`<li>${a}</li>`).join('')+"</ul></div>"
+} else {
+html+=`<div class="comment"><b>アドバイス</b><ul><li>全体的に目標範囲内です。現行治療を継続してください。</li></ul></div>`
 }
 
 el("results").innerHTML=html
 el("results").style.display="block"
 }
+
+// 初期日付セット
+(function(){const d=new Date();el("examDate").value=d.toISOString().slice(0,10)})()
 </script>
 
 </body>
