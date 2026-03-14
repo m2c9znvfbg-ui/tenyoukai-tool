@@ -3,158 +3,46 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>天陽会透析解析支援ツール Clinical</title>
-
+<title>透析解析レポート</title>
 <style>
-body{
-font-family:"Noto Sans JP",system-ui,Roboto,Arial,sans-serif;
-margin:0;
-padding:14px;
-background:#f4f6f9;
-color:#0b1220;
-}
-
+body{font-family:"Noto Sans JP",system-ui,Roboto,Arial,sans-serif;margin:0;padding:14px;background:#f4f6f9;color:#0b1220;}
 .wrap{max-width:1100px;margin:auto}
-
-.card{
-background:#fff;
-padding:16px;
-border-radius:12px;
-margin-bottom:16px;
-box-shadow:0 4px 16px rgba(0,0,0,0.06)
-}
-
-.grid-3{
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:12px;
-margin-bottom:12px
-}
-
-.grid-2{
-display:grid;
-grid-template-columns:repeat(2,1fr);
-gap:12px;
-margin-bottom:12px
-}
-
-input{
-width:100%;
-padding:10px;
-border-radius:8px;
-border:1px solid #e5e7eb;
-font-size:14px
-}
-
-button{
-padding:10px;
-border-radius:8px;
-border:none;
-background:#0b5ed7;
-color:#fff;
-font-weight:700;
-width:100%;
-margin-top:8px;
-cursor:pointer
-}
-
-button.secondary{
-background:#e5e7eb;
-color:#333
-}
-
-table{
-width:100%;
-border-collapse:collapse;
-margin-top:10px
-}
-
-th,td{
-border-bottom:1px solid #eee;
-padding:6px;
-font-size:13px;
-text-align:left
-}
-
-.ok{color:#0f9d58;font-weight:700}
-.warn{color:#d9534f;font-weight:700}
-
-.comment{
-background:#eef6ff;
-padding:12px;
-border-radius:10px;
-margin-top:12px;
-font-size:13px
-}
-
-.headerInfo{
-font-size:13px;
-margin-bottom:6px;
-color:#555
-}
-
-h2,h3{margin:0 0 8px 0}
-
-.calcForm label{
-font-size:12px;
-color:#555;
-margin-bottom:4px;
-display:block
-}
-
-.calcForm input{margin-bottom:6px}
-
-.formTitle{
-font-weight:700;
-margin-bottom:8px;
-font-size:14px;
-color:#0b5ed7
-}
-
-.calcCard{
-background:#f8faff;
-border:1px solid #e0ebff;
-padding:12px;
-border-radius:10px;
-margin-bottom:14px
-}
-
-textarea{
-width:100%;
-height:90px;
-border:1px solid #ddd;
-border-radius:8px;
-padding:8px;
-font-size:13px;
-margin-top:6px
-}
-
-.notice{
-font-size:12px;
-color:#666;
-margin-top:10px
-}
-
+.card{background:#fff;padding:16px;border-radius:12px;margin-bottom:16px;box-shadow:0 4px 16px rgba(0,0,0,0.06);}
+.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:12px;}
+input{width:100%;padding:8px;border-radius:6px;border:1px solid #e5e7eb;font-size:13px;}
+button{padding:10px;border-radius:8px;border:none;background:#0b5ed7;color:#fff;font-weight:700;width:100%;margin-top:8px;cursor:pointer;}
+button.secondary{background:#e5e7eb;color:#333;}
+table{width:100%;border-collapse:collapse;margin-top:10px;}
+th,td{border-bottom:1px solid #eee;padding:6px;font-size:12px;text-align:left;}
+.ok{color:#0f9d58;font-weight:700;}
+.warn{color:#d9534f;font-weight:700;}
+h2,h3{margin:0 0 8px 0;}
+.section-title{font-weight:700;margin:10px 0 6px 0;font-size:14px;color:#0b5ed7;}
+textarea{width:100%;height:80px;border:1px solid #ddd;border-radius:6px;padding:6px;font-size:13px;margin-top:6px;}
+.headerInfo{font-size:13px;margin-bottom:6px;color:#555;}
+.notice{font-size:12px;color:#666;margin-top:10px;}
+@page{size:A4;margin:12mm;}
 @media print{
-button{display:none}
-body{background:#fff}
+body{background:#fff;font-size:11px;}
+.wrap{max-width:100%;}
+button{display:none;}
+.card{page-break-inside:avoid;margin-bottom:6px;padding:10px;}
+table{font-size:11px;}
+th,td{padding:4px;}
+textarea{height:60px;}
 }
 </style>
 </head>
-
 <body>
-
 <div class="wrap">
 
 <div class="card">
-<h2>天陽会透析解析支援ツール Clinical</h2>
-
+<h2>透析解析レポート</h2>
 <div class="grid-2">
 <div>
 <label>患者ID</label>
 <input id="patientId" placeholder="例: P12345">
 </div>
-
 <div>
 <label>日付</label>
 <input type="date" id="examDate">
@@ -162,74 +50,35 @@ body{background:#fff}
 </div>
 </div>
 
-<div class="card calcCard calcForm">
-
-<h3 class="formTitle">検査値入力</h3>
-
-<div class="grid-3">
-
+<div class="card">
+<h3 class="section-title">検査値入力（印刷非表示）</h3>
+<div class="grid-2">
 <input id="K" placeholder="K (mmol/L)">
 <input id="Ca" placeholder="Ca (mg/dL)">
 <input id="Alb" placeholder="Alb (g/dL)">
-
 <input id="P" placeholder="P (mg/dL)">
 <input id="iPTH" placeholder="iPTH (pg/mL)">
 <input id="Hb" placeholder="Hb (g/dL)">
-
 <input id="Fe" placeholder="Fe">
 <input id="TIBC" placeholder="TIBC">
 <input id="Ferritin" placeholder="Ferritin">
-
 <input id="BUNpre" placeholder="BUN前">
 <input id="BUNpost" placeholder="BUN後">
 <input id="dialysisTime" placeholder="透析時間(分)">
-
 <input id="UF" placeholder="除水量">
 <input id="height" placeholder="身長(cm)">
 <input id="weightPre" placeholder="透析前体重">
-
 <input id="weightPost" placeholder="透析後体重">
 <input id="idwg" placeholder="IDWG(kg)">
 <input id="urineNa" placeholder="尿Na (mEq/L)">
-
 <input id="urineVol" placeholder="尿量(L)">
 <input id="saltManual" placeholder="塩分手入力(g/day)">
-
 </div>
-
 <button onclick="calc()">解析実行</button>
 <button class="secondary" onclick="window.print()">A4印刷 / PDF保存</button>
-
 </div>
-
-
-<div class="card calcCard">
-
-<h3 class="formTitle">計算式（参考）</h3>
-
-<ul style="font-size:13px;line-height:1.5">
-
-<li>補正Ca = Ca + 0.8 × (4.0 − Alb)</li>
-
-<li>TSAT = Fe / TIBC × 100</li>
-
-<li>spKt/V ≈ −ln(BUNpost/BUNpre − 0.008×t) + (4 − 3.5×(BUNpost/BUNpre)) × (UF / 体重)</li>
-
-<li>nPCR（簡易） ≈ clamp((BUNpre / 60) × 1.2, 0.5, 1.6)</li>
-
-<li>GNRI = 1.489 × Alb(g/L) + 41.7 × (体重 / 理想体重)</li>
-
-<li>塩分推定（尿） Na×尿量×23 → 食塩換算</li>
-
-<li>塩分推定（IDWG） 推定食塩(g/day) ≈ 3 + 4 × IDWG</li>
-
-</ul>
-
-</div>
-
 
 <div id="results" class="card" style="display:none"></div>
-
 
 <div class="notice">
 ※本ツールは計算支援を目的としたものであり、診断・治療の判断を提供するものではありません。最終的な臨床判断は医療従事者が行ってください。
@@ -237,15 +86,12 @@ body{background:#fff}
 
 </div>
 
-
 <script>
-
 const el=id=>document.getElementById(id)
 const num=v=>{const n=parseFloat(v);return isNaN(n)?null:n}
 const clamp=(v,min,max)=>Math.max(min,Math.min(max,v))
 
 function calc(){
-
 const patientId=el("patientId").value
 const examDate=el("examDate").value
 
@@ -258,143 +104,82 @@ const Hb=num(el("Hb").value)
 const Fe=num(el("Fe").value)
 const TIBC=num(el("TIBC").value)
 const Ferritin=num(el("Ferritin").value)
-
 const BUNpre=num(el("BUNpre").value)
 const BUNpost=num(el("BUNpost").value)
 const dialysisTime=num(el("dialysisTime").value)
 const UF=num(el("UF").value)
-
 const height=num(el("height").value)
 const weightPre=num(el("weightPre").value)
-
 const idwg=num(el("idwg").value)
 const urineNa=num(el("urineNa").value)
 const urineVol=num(el("urineVol").value)
-
 const saltManual=num(el("saltManual").value)
 
-
 const correctedCa=(Ca&&Alb)?(Ca+0.8*(4-Alb)):null
-
 const TSAT=(Fe&&TIBC)?((Fe/TIBC)*100):null
 
-
 let spKtV=null
-
 if(BUNpre&&BUNpost&&dialysisTime&&UF&&weightPre){
-
 const t=dialysisTime/60
 const R=BUNpost/BUNpre
-
-if(R>0){
-
-spKtV=(-Math.log(R-0.008*t)+(4-3.5*R)*(UF/weightPre))
-
+if(R>0) spKtV=(-Math.log(R-0.008*t)+(4-3.5*R)*(UF/weightPre))
 }
-
-}
-
 
 const nPCR=BUNpre?clamp((BUNpre/60)*1.2,0.5,1.6):null
-
-
 let GNRI=null
-
 if(Alb&&height&&weightPre){
-
 const ideal=22*(height/100)*(height/100)
-
 GNRI=1.489*(Alb*10)+41.7*(weightPre/ideal)
-
 }
-
 
 let salt=null
 let saltSource="未推定"
-
-if(saltManual){
-
-salt=saltManual
-saltSource="手入力"
-
-}
-
-else if(urineNa&&urineVol){
-
-salt=(urineNa*urineVol*23/1000*2.54).toFixed(2)
-saltSource="尿データ推定"
-
-}
-
-else if(idwg){
-
-salt=(3+4*idwg).toFixed(2)
-saltSource="IDWG推定"
-
-}
-
+if(saltManual){salt=saltManual;saltSource="手入力"}
+else if(urineNa&&urineVol){salt=(urineNa*urineVol*23/1000*2.54).toFixed(2);saltSource="尿データ推定"}
+else if(idwg){salt=(3+4*idwg).toFixed(2);saltSource="IDWG推定"}
 
 function judge(val,min,max){
-
 if(val==null)return""
-
 if(min!=null&&val<min)return"warn"
-
 if(max!=null&&val>max)return"warn"
-
 return"ok"
-
 }
-
 
 let html=`<div class="headerInfo"><b>患者ID:</b> ${patientId||"—"}　<b>日付:</b> ${examDate||"—"}</div>`
 
-html+="<table><tr><th>項目</th><th>値</th><th>目標</th><th>判定</th></tr>"
+function row(name,val,target,min,max){const cls=judge(val,min,max);const label=cls==="ok"?'<span class="ok">OK</span>':cls==="warn"?'<span class="warn">要対応</span>':'未入力';return `<tr><td>${name}</td><td>${val!=null?(typeof val==="number"?val.toFixed(2):val):"—"}</td><td>${target}</td><td>${label}</td></tr>`}
 
-
-function row(name,val,target,min,max){
-
-const cls=judge(val,min,max)
-
-const label=cls==="ok"?'<span class="ok">OK</span>':cls==="warn"?'<span class="warn">要対応</span>':'未入力'
-
-return `<tr><td>${name}</td><td>${val!=null?(typeof val==="number"?val.toFixed(2):val):"—"}</td><td>${target}</td><td>${label}</td></tr>`
-
-}
-
-
+html+='<table>'
+html+='<tr><th colspan="4" class="section-title">透析量</th></tr>'
 html+=row("spKt/V",spKtV,"≥1.4",1.4,null)
-html+=row("K",K,"3.5–5.5",3.5,5.5)
+html+=row("nPCR",nPCR,"0.5–1.6",0.5,1.6)
+
+html+='<tr><th colspan="4" class="section-title">貧血</th></tr>'
 html+=row("Hb",Hb,"10–12",10,12)
 html+=row("TSAT",TSAT,"≥20%",20,null)
 html+=row("Ferritin",Ferritin,"100–300",100,300)
+
+html+='<tr><th colspan="4" class="section-title">CKD-MBD</th></tr>'
 html+=row("P",P,"3.5–5.5",3.5,5.5)
 html+=row("補正Ca",correctedCa,"8.4–9.5",8.4,9.5)
 html+=row("iPTH",iPTH,"60–240",60,240)
-html+=row("nPCR",nPCR,"0.5–1.6",0.5,1.6)
+
+html+='<tr><th colspan="4" class="section-title">栄養</th></tr>'
+html+=row("Alb",Alb,"3.5–4.5",3.5,4.5)
 html+=row("GNRI",GNRI,"≥92",92,null)
+
+html+='<tr><th colspan="4" class="section-title">塩分</th></tr>'
 html+=row("塩分推定",salt,saltSource,null,null)
 
-html+="</table>"
+html+='</table>'
 
-html+=`
-<div class="comment">
-<b>CEコメント</b>
-<textarea placeholder="CEコメントを入力"></textarea>
-</div>
-`
+html+=`<div class="comment"><b>CEコメント</b><textarea placeholder="CEコメントを入力"></textarea></div>`
 
 el("results").innerHTML=html
 el("results").style.display="block"
-
 }
 
-(function(){
-const d=new Date()
-el("examDate").value=d.toISOString().slice(0,10)
-})()
-
+(function(){const d=new Date();el("examDate").value=d.toISOString().slice(0,10)})()
 </script>
-
 </body>
 </html>
