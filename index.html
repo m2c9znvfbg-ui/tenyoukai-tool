@@ -1,185 +1,314 @@
 <!doctype html>
 <html lang="ja">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>透析解析レポート</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>透析解析レポート入力</title>
 <style>
-body{font-family:"Noto Sans JP",system-ui,Roboto,Arial,sans-serif;margin:0;padding:14px;background:#f4f6f9;color:#0b1220;}
-.wrap{max-width:1100px;margin:auto}
-.card{background:#fff;padding:16px;border-radius:12px;margin-bottom:16px;box-shadow:0 4px 16px rgba(0,0,0,0.06);}
-.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:12px;}
-input{width:100%;padding:8px;border-radius:6px;border:1px solid #e5e7eb;font-size:13px;}
-button{padding:10px;border-radius:8px;border:none;background:#0b5ed7;color:#fff;font-weight:700;width:100%;margin-top:8px;cursor:pointer;}
-button.secondary{background:#e5e7eb;color:#333;}
-table{width:100%;border-collapse:collapse;margin-top:10px;}
-th,td{border-bottom:1px solid #eee;padding:6px;font-size:12px;text-align:left;}
-.ok{color:#0f9d58;font-weight:700;}
-.warn{color:#d9534f;font-weight:700;}
-h2,h3{margin:0 0 8px 0;}
-.section-title{font-weight:700;margin:10px 0 6px 0;font-size:14px;color:#0b5ed7;}
-textarea{width:100%;height:80px;border:1px solid #ddd;border-radius:6px;padding:6px;font-size:13px;margin-top:6px;}
-.headerInfo{font-size:13px;margin-bottom:6px;color:#555;}
-.notice{font-size:12px;color:#666;margin-top:10px;}
-@page{size:A4;margin:12mm;}
-@media print{
-body{background:#fff;font-size:11px;}
-.wrap{max-width:100%;}
-button{display:none;}
-.card{page-break-inside:avoid;margin-bottom:6px;padding:10px;}
-table{font-size:11px;}
-th,td{padding:4px;}
-textarea{height:60px;}
-}
+  body{font-family: "Yu Gothic","Meiryo","Segoe UI",sans-serif;background:#f6f8fb;color:#1f2937;margin:0;padding:24px;}
+  .container{max-width:980px;margin:0 auto;background:#fff;border-radius:10px;box-shadow:0 6px 18px rgba(15,23,42,0.08);padding:20px;}
+  h1{margin:0 0 12px;font-size:20px;color:#0b5ed7;}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+  .full{grid-column:1/-1;}
+  label{display:block;font-size:12px;color:#374151;margin-bottom:6px;}
+  input[type="text"], input[type="number"], input[type="date"], input[type="datetime-local"], textarea{
+    width:100%;padding:8px 10px;border:1px solid #e6eef8;border-radius:6px;background:#fbfdff;
+    box-sizing:border-box;font-size:14px;color:#0f1724;
+  }
+  textarea{min-height:80px;resize:vertical;}
+  .btn-row{display:flex;gap:10px;align-items:center;margin-top:14px;}
+  button{background:#0b5ed7;color:#fff;border:none;padding:10px 16px;border-radius:8px;font-weight:600;cursor:pointer;}
+  button.secondary{background:#6c757d;}
+  .card{background:#f8fafc;border-radius:8px;padding:12px;box-shadow:inset 0 0 0 1px rgba(11,94,215,0.04);font-size:13px;}
+  .note{font-size:12px;color:#6b7280;margin-top:8px;}
 </style>
 </head>
 <body>
-<div class="wrap">
+<div class="container">
+  <h1>透析解析レポート入力</h1>
 
-<div class="card">
-<h2>透析解析レポート</h2>
-<div class="grid-2">
-<div>
-<label>患者ID</label>
-<input id="patientId" placeholder="例: P12345">
-</div>
-<div>
-<label>日付</label>
-<input type="date" id="examDate">
-</div>
-</div>
-</div>
+  <div class="card note">必須：患者ID・採血日。入力後「送信」ボタンで Google フォームへ自動送信され、スプレッドシートに蓄積されます。</div>
 
-<div class="card">
-<h3 class="section-title">検査値入力（印刷非表示）</h3>
-<div class="grid-2">
-<input id="K" placeholder="K (mmol/L)">
-<input id="Ca" placeholder="Ca (mg/dL)">
-<input id="Alb" placeholder="Alb (g/dL)">
-<input id="P" placeholder="P (mg/dL)">
-<input id="iPTH" placeholder="iPTH (pg/mL)">
-<input id="Hb" placeholder="Hb (g/dL)">
-<input id="Fe" placeholder="Fe">
-<input id="TIBC" placeholder="TIBC">
-<input id="Ferritin" placeholder="Ferritin">
-<input id="BUNpre" placeholder="BUN前">
-<input id="BUNpost" placeholder="BUN後">
-<input id="dialysisTime" placeholder="透析時間(分)">
-<input id="UF" placeholder="除水量">
-<input id="height" placeholder="身長(cm)">
-<input id="weightPre" placeholder="透析前体重">
-<input id="weightPost" placeholder="透析後体重">
-<input id="idwg" placeholder="IDWG(kg)">
-<input id="urineNa" placeholder="尿Na (mEq/L)">
-<input id="urineVol" placeholder="尿量(L)">
-<input id="saltManual" placeholder="塩分手入力(g/day)">
-</div>
-<button onclick="calc()">解析実行</button>
-<button class="secondary" onclick="window.print()">A4印刷 / PDF保存</button>
-</div>
+  <form id="inputForm" onsubmit="event.preventDefault(); submitToGoogleForm();">
+    <div class="grid" style="margin-top:12px;">
+      <div>
+        <label>患者ID（必須）</label>
+        <input id="patientId" type="text" required placeholder="例: P12345">
+      </div>
 
-<div id="results" class="card" style="display:none"></div>
+      <div>
+        <label>採血日（必須）</label>
+        <input id="examDate" type="date" required>
+      </div>
 
-<div class="notice">
-※本ツールは計算支援を目的としたものであり、診断・治療の判断を提供するものではありません。最終的な臨床判断は医療従事者が行ってください。
-</div>
+      <div>
+        <label>K（数値）</label>
+        <input id="K" type="number" step="0.01" min="0">
+      </div>
 
+      <div>
+        <label>Ca（数値）</label>
+        <input id="Ca" type="number" step="0.01">
+      </div>
+
+      <div>
+        <label>Alb（数値）</label>
+        <input id="Alb" type="number" step="0.01">
+      </div>
+
+      <div>
+        <label>P（数値）</label>
+        <input id="P" type="number" step="0.01">
+      </div>
+
+      <div>
+        <label>iPTH（数値）</label>
+        <input id="iPTH" type="number" step="0.1">
+      </div>
+
+      <div>
+        <label>Hb（数値）</label>
+        <input id="Hb" type="number" step="0.01">
+      </div>
+
+      <div>
+        <label>Fe（数値）</label>
+        <input id="Fe" type="number" step="0.1">
+      </div>
+
+      <div>
+        <label>TIBC（数値）</label>
+        <input id="TIBC" type="number" step="0.1">
+      </div>
+
+      <div>
+        <label>Ferritin（数値）</label>
+        <input id="Ferritin" type="number" step="0.1">
+      </div>
+
+      <div>
+        <label>BUN前（数値）</label>
+        <input id="BUNpre" type="number" step="0.1">
+      </div>
+
+      <div>
+        <label>BUN後（数値）</label>
+        <input id="BUNpost" type="number" step="0.1">
+      </div>
+
+      <div>
+        <label>透析時間（分）</label>
+        <input id="dialysisTime" type="number" step="1" min="0">
+      </div>
+
+      <div>
+        <label>除水量（kg）</label>
+        <input id="UF" type="number" step="0.1">
+      </div>
+
+      <div>
+        <label>身長（cm）</label>
+        <input id="height" type="number" step="0.1">
+      </div>
+
+      <div>
+        <label>透析前体重（kg）</label>
+        <input id="weightPre" type="number" step="0.1">
+      </div>
+
+      <div>
+        <label>透析後体重（kg）</label>
+        <input id="weightPost" type="number" step="0.1">
+      </div>
+
+      <div>
+        <label>IDWG（kg）</label>
+        <input id="idwg" type="number" step="0.01">
+      </div>
+
+      <div>
+        <label>尿Na（mEq/L）</label>
+        <input id="urineNa" type="number" step="0.1">
+      </div>
+
+      <div>
+        <label>尿量（L）</label>
+        <input id="urineVol" type="number" step="0.01">
+      </div>
+
+      <div>
+        <label>塩分手入力（g/day）</label>
+        <input id="saltManual" type="number" step="0.01">
+      </div>
+
+      <div class="full">
+        <label>CEコメント</label>
+        <textarea id="comment" placeholder="任意のコメントを入力"></textarea>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button type="submit">送信</button>
+      <button type="button" class="secondary" onclick="resetForm()">クリア</button>
+      <div style="margin-left:auto;font-size:12px;color:#6b7280;">送信は非同期で行われます。完了通知が出ます。</div>
+    </div>
+  </form>
 </div>
 
 <script>
-const el=id=>document.getElementById(id)
-const num=v=>{const n=parseFloat(v);return isNaN(n)?null:n}
-const clamp=(v,min,max)=>Math.max(min,Math.min(max,v))
+/* ---------- Googleフォーム設定（あなたのフォームに合わせて既に埋め済み） ---------- */
+const GOOGLE_FORM_ACTION = "https://docs.google.com/forms/d/e/1FAIpQLSeY4hJIo8fqT__MURh4__OJCJJFC7OuAIN0m93NezKSxWwXhA/formResponse";
+const ENTRY = {
+  patientId: "entry.1408149842",
+  examDate:  "entry.682524855",
+  K:         "entry.902839305",
+  Ca:        "entry.1282247271",
+  Alb:       "entry.553676846",
+  P:         "entry.1122270247",
+  iPTH:      "entry.828508291",
+  Hb:        "entry.1432055817",
+  Fe:        "entry.269083043",
+  TIBC:      "entry.905449551",
+  Ferritin:  "entry.1043305105",
+  BUNpre:    "entry.1271587686",
+  BUNpost:   "entry.2051670408",
+  dialysisTime:"entry.1989053109",
+  UF:        "entry.1017877093",
+  height:    "entry.2020297135",
+  weightPre: "entry.1596697131"
+  /* 透析後体重やコメントの entry が判明したらここに追加してください */
+};
 
-function calc(){
-const patientId=el("patientId").value
-const examDate=el("examDate").value
+/* ---------- ユーティリティ ---------- */
+const el = id => document.getElementById(id);
+const num = v => { const n = parseFloat(v); return isNaN(n) ? "" : n; }
 
-const K=num(el("K").value)
-const Ca=num(el("Ca").value)
-const Alb=num(el("Alb").value)
-const P=num(el("P").value)
-const iPTH=num(el("iPTH").value)
-const Hb=num(el("Hb").value)
-const Fe=num(el("Fe").value)
-const TIBC=num(el("TIBC").value)
-const Ferritin=num(el("Ferritin").value)
-const BUNpre=num(el("BUNpre").value)
-const BUNpost=num(el("BUNpost").value)
-const dialysisTime=num(el("dialysisTime").value)
-const UF=num(el("UF").value)
-const height=num(el("height").value)
-const weightPre=num(el("weightPre").value)
-const idwg=num(el("idwg").value)
-const urineNa=num(el("urineNa").value)
-const urineVol=num(el("urineVol").value)
-const saltManual=num(el("saltManual").value)
+/* ---------- 計算ロジック（補正Ca・GNRI・塩分推定など） ---------- */
+function computeFieldsForForm(){
+  const Alb = num(el("Alb")?.value);
+  const height = num(el("height")?.value);
+  const weightPre = num(el("weightPre")?.value);
+  const Ca_raw = num(el("Ca")?.value);
 
-const correctedCa=(Ca&&Alb)?(Ca+0.8*(4-Alb)):null
-const TSAT=(Fe&&TIBC)?((Fe/TIBC)*100):null
+  const correctedCa = (Ca_raw !== "" && Alb !== "") ? (Ca_raw + 0.8 * (4 - Alb)) : (el("Ca")?.value || "");
+  let GNRI = "";
+  if(Alb !== "" && height !== "" && weightPre !== ""){
+    const ideal = 22 * (height/100) * (height/100);
+    GNRI = (1.489 * (Alb*10) + 41.7 * (weightPre / ideal)).toFixed(2);
+  }
 
-let spKtV=null
-if(BUNpre&&BUNpost&&dialysisTime&&UF&&weightPre){
-const t=dialysisTime/60
-const R=BUNpost/BUNpre
-if(R>0) spKtV=(-Math.log(R-0.008*t)+(4-3.5*R)*(UF/weightPre))
+  const saltManual = el("saltManual")?.value || "";
+  let saltEst = "";
+  if(saltManual) saltEst = saltManual;
+  else {
+    const idwg = num(el("idwg")?.value);
+    const urineNa = num(el("urineNa")?.value);
+    const urineVol = num(el("urineVol")?.value);
+    if(urineNa !== "" && urineVol !== "") saltEst = (urineNa * urineVol * 23 / 1000 * 2.54).toFixed(2);
+    else if(idwg !== "") saltEst = (3 + 4 * idwg).toFixed(2);
+  }
+
+  return {
+    patientId: el("patientId")?.value || "",
+    examDate: el("examDate")?.value || "",
+    K: el("K")?.value || "",
+    Ca: correctedCa || "",
+    Alb: el("Alb")?.value || "",
+    P: el("P")?.value || "",
+    iPTH: el("iPTH")?.value || "",
+    Hb: el("Hb")?.value || "",
+    Fe: el("Fe")?.value || "",
+    TIBC: el("TIBC")?.value || "",
+    Ferritin: el("Ferritin")?.value || "",
+    BUNpre: el("BUNpre")?.value || "",
+    BUNpost: el("BUNpost")?.value || "",
+    dialysisTime: el("dialysisTime")?.value || "",
+    UF: el("UF")?.value || "",
+    height: el("height")?.value || "",
+    weightPre: el("weightPre")?.value || "",
+    weightPost: el("weightPost")?.value || "",
+    idwg: el("idwg")?.value || "",
+    urineNa: el("urineNa")?.value || "",
+    urineVol: el("urineVol")?.value || "",
+    saltEst: saltEst || "",
+    comment: el("comment")?.value || ""
+  };
 }
 
-const nPCR=BUNpre?clamp((BUNpre/60)*1.2,0.5,1.6):null
-let GNRI=null
-if(Alb&&height&&weightPre){
-const ideal=22*(height/100)*(height/100)
-GNRI=1.489*(Alb*10)+41.7*(weightPre/ideal)
+/* ---------- Googleフォームへ送信（hidden iframe） ---------- */
+function submitToGoogleForm(){
+  const payload = computeFieldsForForm();
+
+  // 必須チェック（簡易）
+  if(!payload.patientId || !payload.examDate){
+    alert("患者IDと採血日を入力してください。");
+    return;
+  }
+
+  // hidden iframe を作成（なければ）
+  let iframe = document.getElementById("hidden_iframe");
+  if(!iframe){
+    iframe = document.createElement("iframe");
+    iframe.style.display = "none";
+    iframe.name = "hidden_iframe";
+    iframe.id = "hidden_iframe";
+    document.body.appendChild(iframe);
+  }
+
+  // form を動的作成して submit（画面遷移しない）
+  const form = document.createElement("form");
+  form.action = GOOGLE_FORM_ACTION;
+  form.method = "POST";
+  form.target = "hidden_iframe";
+
+  function addField(entryId, value){
+    const input = document.createElement("input");
+    input.type = "hidden";
+    input.name = entryId;
+    input.value = value != null ? value : "";
+    form.appendChild(input);
+  }
+
+  // ENTRY マッピング（既知の項目）
+  addField(ENTRY.patientId, payload.patientId);
+  addField(ENTRY.examDate, payload.examDate);
+  addField(ENTRY.K, payload.K);
+  addField(ENTRY.Ca, payload.Ca);
+  addField(ENTRY.Alb, payload.Alb);
+  addField(ENTRY.P, payload.P);
+  addField(ENTRY.iPTH, payload.iPTH);
+  addField(ENTRY.Hb, payload.Hb);
+  addField(ENTRY.Fe, payload.Fe);
+  addField(ENTRY.TIBC, payload.TIBC);
+  addField(ENTRY.Ferritin, payload.Ferritin);
+  addField(ENTRY.BUNpre, payload.BUNpre);
+  addField(ENTRY.BUNpost, payload.BUNpost);
+  addField(ENTRY.dialysisTime, payload.dialysisTime);
+  addField(ENTRY.UF, payload.UF);
+  addField(ENTRY.height, payload.height);
+  addField(ENTRY.weightPre, payload.weightPre);
+
+  // 追加項目（フォームに entry があればここに追記してください）
+  // 例: addField("entry.XXXXXXXXX", payload.weightPost);
+  // 例: addField("entry.YYYYYYYYYY", payload.comment);
+
+  // 監査用に計算値も送る（必要なら entry を追加して送信）
+  // 例: addField("entry.GNRI_ENTRY_ID", payload.GNRI);
+
+  document.body.appendChild(form);
+
+  iframe.onload = function(){
+    alert("送信が完了しました。スプレッドシートを確認してください。");
+    form.remove();
+  };
+
+  form.submit();
 }
 
-let salt=null
-let saltSource="未推定"
-if(saltManual){salt=saltManual;saltSource="手入力"}
-else if(urineNa&&urineVol){salt=(urineNa*urineVol*23/1000*2.54).toFixed(2);saltSource="尿データ推定"}
-else if(idwg){salt=(3+4*idwg).toFixed(2);saltSource="IDWG推定"}
-
-function judge(val,min,max){
-if(val==null)return""
-if(min!=null&&val<min)return"warn"
-if(max!=null&&val>max)return"warn"
-return"ok"
+/* ---------- 補助 ---------- */
+function resetForm(){
+  document.getElementById("inputForm").reset();
 }
-
-let html=`<div class="headerInfo"><b>患者ID:</b> ${patientId||"—"}　<b>日付:</b> ${examDate||"—"}</div>`
-
-function row(name,val,target,min,max){const cls=judge(val,min,max);const label=cls==="ok"?'<span class="ok">OK</span>':cls==="warn"?'<span class="warn">要対応</span>':'未入力';return `<tr><td>${name}</td><td>${val!=null?(typeof val==="number"?val.toFixed(2):val):"—"}</td><td>${target}</td><td>${label}</td></tr>`}
-
-html+='<table>'
-html+='<tr><th colspan="4" class="section-title">透析量</th></tr>'
-html+=row("spKt/V",spKtV,"≥1.4",1.4,null)
-html+=row("nPCR",nPCR,"0.5–1.6",0.5,1.6)
-
-html+='<tr><th colspan="4" class="section-title">貧血</th></tr>'
-html+=row("Hb",Hb,"10–12",10,12)
-html+=row("TSAT",TSAT,"≥20%",20,null)
-html+=row("Ferritin",Ferritin,"100–300",100,300)
-
-html+='<tr><th colspan="4" class="section-title">CKD-MBD</th></tr>'
-html+=row("P",P,"3.5–5.5",3.5,5.5)
-html+=row("補正Ca",correctedCa,"8.4–9.5",8.4,9.5)
-html+=row("iPTH",iPTH,"60–240",60,240)
-
-html+='<tr><th colspan="4" class="section-title">栄養</th></tr>'
-html+=row("Alb",Alb,"3.5–4.5",3.5,4.5)
-html+=row("GNRI",GNRI,"≥92",92,null)
-
-html+='<tr><th colspan="4" class="section-title">塩分</th></tr>'
-html+=row("塩分推定",salt,saltSource,null,null)
-
-html+='</table>'
-
-html+=`<div class="comment"><b>CEコメント</b><textarea placeholder="CEコメントを入力"></textarea></div>`
-
-el("results").innerHTML=html
-el("results").style.display="block"
-}
-
-(function(){const d=new Date();el("examDate").value=d.toISOString().slice(0,10)})()
 </script>
 </body>
 </html>
