@@ -3,527 +3,250 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>透析解析レポート Pro（Googleフォーム連携 完全版）</title>
+<title>透析解析レポート Pro（フォーム送信 デバッグ付き）</title>
 <style>
-body{ font-family:"Noto Sans JP",sans-serif; margin:0; padding:16px; background:#f4f6f9; color:#111827; }
-.wrap{ max-width:1200px; margin:auto; }
-.card{ background:#fff; border-radius:12px; padding:16px; margin-bottom:16px; box-shadow:0 2px 10px rgba(0,0,0,0.05); }
-h1,h2,h3{ margin-top:0; }
-.grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
-@media(max-width:900px){ .grid{ grid-template-columns:1fr; } }
-label{ font-size:12px; color:#6b7280; display:block; margin-bottom:4px; }
-input,textarea,select{ width:100%; padding:8px; border-radius:8px; border:1px solid #d1d5db; box-sizing:border-box; font-size:14px; }
-input[type="number"]{ -moz-appearance:textfield; }
-button{ padding:10px 14px; border:none; border-radius:8px; cursor:pointer; font-weight:700; }
-.btn-primary{ background:#2563eb; color:#fff; }
-.btn-secondary{ background:#e5e7eb; }
-.btn-success{ background:#16a34a; color:#fff; }
-.btn-danger{ background:#dc2626; color:#fff; }
-.row-buttons{ display:flex; gap:10px; flex-wrap:wrap; margin-top:12px; }
-table{ width:100%; border-collapse:collapse; margin-top:10px; }
-th,td{ border-bottom:1px solid #e5e7eb; padding:8px; font-size:13px; text-align:left; }
-.ok{ color:#16a34a; font-weight:700; }
-.warn{ color:#dc2626; font-weight:700; }
-.kpi-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-top:14px; }
-@media(max-width:900px){ .kpi-grid{ grid-template-columns:repeat(2,1fr); } }
-.kpi{ background:#f9fbff; border:1px solid #dbeafe; border-radius:10px; padding:12px; text-align:center; }
-.kpi .label{ font-size:12px; color:#6b7280; }
-.kpi .value{ font-size:22px; font-weight:700; color:#2563eb; margin-top:6px; }
-.notice{ font-size:12px; color:#6b7280; }
-#status{ margin-top:12px; font-weight:700; }
-textarea{ min-height:80px; }
-.historyBox{ background:#f9fafb; border:1px solid #e5e7eb; border-radius:10px; padding:10px; margin-top:12px; }
-@media print{ button{ display:none; } body{ background:#fff; } .card{ box-shadow:none; border:1px solid #ddd; } }
+body{font-family:"Noto Sans JP",sans-serif;margin:16px;background:#f4f6f9;color:#111827}
+.wrap{max-width:1100px;margin:auto}
+.card{background:#fff;border-radius:10px;padding:14px;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,0.05)}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media(max-width:900px){.grid{grid-template-columns:1fr}}
+label{font-size:12px;color:#6b7280;display:block;margin-bottom:6px}
+input,textarea,select{width:100%;padding:8px;border-radius:8px;border:1px solid #d1d5db;box-sizing:border-box}
+button{padding:8px 12px;border-radius:8px;border:none;cursor:pointer;font-weight:700}
+.btn-primary{background:#2563eb;color:#fff}
+.btn-success{background:#16a34a;color:#fff}
+.btn-secondary{background:#e5e7eb}
+#previewBox{white-space:pre-wrap;background:#fff;border:1px solid #e5e7eb;padding:10px;border-radius:8px;margin-top:10px;font-size:13px}
+.notice{font-size:13px;color:#6b7280}
+.warn{color:#dc2626;font-weight:700}
+.ok{color:#16a34a;font-weight:700}
 </style>
 </head>
 <body>
 <div class="wrap">
 
   <div class="card">
-    <h1>透析解析レポート Pro（Googleフォーム連携 完全版）</h1>
+    <h2>透析解析レポート Pro（送信プレビュー付き）</h2>
 
     <div class="grid">
-      <div>
-        <label for="patientId">患者ID（必須）</label>
-        <input id="patientId" type="text" placeholder="例: 123456" aria-label="患者ID">
-      </div>
-
-      <div>
-        <label for="examDate">採血日（必須）</label>
-        <input id="examDate" type="date" aria-label="採血日">
-      </div>
-
-      <div>
-        <label for="dialysisTime">透析時間（分）</label>
-        <input id="dialysisTime" type="number" step="1" min="0" aria-label="透析時間">
-      </div>
-
-      <div>
-        <label for="K">K</label>
-        <input id="K" type="number" step="0.1" min="0" aria-label="K">
-      </div>
-
-      <div>
-        <label for="Ca">Ca</label>
-        <input id="Ca" type="number" step="0.1" min="0" aria-label="Ca">
-      </div>
-
-      <div>
-        <label for="Alb">Alb</label>
-        <input id="Alb" type="number" step="0.1" min="0" aria-label="Alb">
-      </div>
-
-      <div>
-        <label for="P">P</label>
-        <input id="P" type="number" step="0.1" min="0" aria-label="P">
-      </div>
-
-      <div>
-        <label for="iPTH">iPTH</label>
-        <input id="iPTH" type="number" step="1" min="0" aria-label="iPTH">
-      </div>
-
-      <div>
-        <label for="Hb">Hb</label>
-        <input id="Hb" type="number" step="0.1" min="0" aria-label="Hb">
-      </div>
-
-      <div>
-        <label for="Fe">Fe</label>
-        <input id="Fe" type="number" step="1" min="0" aria-label="Fe">
-      </div>
-
-      <div>
-        <label for="TIBC">TIBC</label>
-        <input id="TIBC" type="number" step="1" min="0" aria-label="TIBC">
-      </div>
-
-      <div>
-        <label for="Ferritin">Ferritin</label>
-        <input id="Ferritin" type="number" step="1" min="0" aria-label="Ferritin">
-      </div>
-
-      <div>
-        <label for="BUNpre">BUN前</label>
-        <input id="BUNpre" type="number" step="0.1" min="0" aria-label="BUN前">
-      </div>
-
-      <div>
-        <label for="BUNpost">BUN後</label>
-        <input id="BUNpost" type="number" step="0.1" min="0" aria-label="BUN後">
-      </div>
-
-      <div>
-        <label for="UF">除水量(kg)</label>
-        <input id="UF" type="number" step="0.1" min="0" aria-label="除水量">
-      </div>
-
-      <div>
-        <label for="height">身長(cm)</label>
-        <input id="height" type="number" step="0.1" min="0" aria-label="身長">
-      </div>
-
-      <div>
-        <label for="weightPre">透析前体重(kg)</label>
-        <input id="weightPre" type="number" step="0.1" min="0" aria-label="透析前体重">
-      </div>
-
-      <div>
-        <label for="weightPost">透析後体重(kg)</label>
-        <input id="weightPost" type="number" step="0.1" min="0" aria-label="透析後体重">
-      </div>
+      <div><label for="patientId">患者ID</label><input id="patientId" type="text"></div>
+      <div><label for="examDate">採血日</label><input id="examDate" type="date"></div>
+      <div><label for="K">K</label><input id="K" type="number" step="0.1"></div>
+      <div><label for="Ca">Ca</label><input id="Ca" type="number" step="0.1"></div>
+      <div><label for="Alb">Alb</label><input id="Alb" type="number" step="0.1"></div>
+      <div><label for="P">P</label><input id="P" type="number" step="0.1"></div>
+      <div><label for="iPTH">iPTH</label><input id="iPTH" type="number" step="1"></div>
+      <div><label for="Hb">Hb</label><input id="Hb" type="number" step="0.1"></div>
+      <div><label for="Fe">Fe</label><input id="Fe" type="number" step="1"></div>
+      <div><label for="TIBC">TIBC</label><input id="TIBC" type="number" step="1"></div>
+      <div><label for="Ferritin">Ferritin</label><input id="Ferritin" type="number" step="1"></div>
+      <div><label for="BUNpre">BUN前</label><input id="BUNpre" type="number" step="0.1"></div>
+      <div><label for="BUNpost">BUN後</label><input id="BUNpost" type="number" step="0.1"></div>
+      <div><label for="dialysisTime">透析時間 分</label><input id="dialysisTime" type="number" step="1"></div>
+      <div><label for="UF">除水量 kg</label><input id="UF" type="number" step="0.1"></div>
+      <div><label for="height">身長 cm</label><input id="height" type="number" step="0.1"></div>
+      <div><label for="weightPre">透析前体重 kg</label><input id="weightPre" type="number" step="0.1"></div>
+      <div><label for="weightPost">透析後体重 kg</label><input id="weightPost" type="number" step="0.1"></div>
+      <div><label for="ceComment">CEコメント</label><textarea id="ceComment"></textarea></div>
     </div>
 
-    <h3 style="margin-top:18px;">NRI-JH</h3>
-    <div class="grid">
-      <div>
-        <label for="BMI">BMI</label>
-        <input id="BMI" type="number" step="0.1" min="0" aria-label="BMI">
-      </div>
-
-      <div>
-        <label for="NRIAlb">Alb（NRI-JH用）</label>
-        <input id="NRIAlb" type="number" step="0.1" min="0" aria-label="Alb for NRI">
-      </div>
-
-      <div>
-        <label for="Cr">Cr</label>
-        <input id="Cr" type="number" step="0.1" min="0" aria-label="Cr">
-      </div>
-
-      <div>
-        <label for="TCHO">総コレステロール</label>
-        <input id="TCHO" type="number" step="1" min="0" aria-label="総コレステロール">
-      </div>
-    </div>
-
-    <div style="margin-top:14px;">
-      <label for="ceComment">CEコメント</label>
-      <textarea id="ceComment" aria-label="CEコメント"></textarea>
-    </div>
-
-    <div class="row-buttons">
-      <button id="btnCalc" class="btn-primary" onclick="calc()">解析実行</button>
+    <div style="margin-top:12px;">
+      <button class="btn-primary" onclick="previewMapping()">プレビュー（送信データ確認）</button>
       <button id="btnSend" class="btn-success" onclick="submitToGoogleFormOrdered()">スプレッドシートへ送信</button>
-      <button class="btn-secondary" onclick="window.print()">A4印刷</button>
-      <button class="btn-danger" onclick="clearForm()">入力クリア</button>
-      <button class="btn-primary" onclick="loadHistory()">過去データ呼び出し</button>
+      <span class="notice">※ まずプレビューで entry と値の対応を必ず確認してください。</span>
     </div>
 
-    <div id="status" role="status" aria-live="polite"></div>
-  </div>
+    <div id="status" style="margin-top:10px"></div>
 
-  <div id="historyArea" class="card" style="display:none;">
-    <h2>過去データ</h2>
-    <div id="historyContent"></div>
-  </div>
+    <div id="previewBox" style="display:none"></div>
 
-  <div id="results" class="card" style="display:none;"></div>
+    <div style="margin-top:12px;">
+      <b>デバッグ用：ENTRY_ORDER（列順） と ENTRY_IDS（entry ID の配列）</b>
+      <div class="notice">必要ならここを編集してフォームの実際の entry ID に合わせてください（開発者ツールで確認）。</div>
+      <textarea id="debugEntryIds" style="width:100%;height:120px;margin-top:8px;">
+// ENTRY_ORDER: スプレッドシートのヘッダ順（左から右）
+["timestamp","patientId","examDate","K","Ca","Alb","P","iPTH","Hb","Fe","TIBC","Ferritin","BUNpre","BUNpost","dialysisTime","UF","height","weightPre","weightPost","correctedCa","GNRI","spKtV","nPCR","saltEst","logicVersion","ceComment","nriJH"]
+
+// ENTRY_IDS: 上の順序に対応する entry.XXXXX をカンマ区切りで並べる（必ず 27 個）
+["","entry.1408149842","entry.682524855","entry.902839305","entry.1282247271","entry.553676846","entry.1122270247","entry.828508291","entry.1432055817","entry.269083043","entry.905449551","entry.1043305105","entry.1271587686","entry.2051670408","entry.1989053109","entry.1017877093","entry.2020297135","entry.1596697131","entry.2120517553","entry.1346758513","entry.1014469604","entry.1879519402","entry.522730033","entry.1468863185","entry.1563221666","entry.1014469604","entry.1596697131"]
+      </textarea>
+      <div class="notice" style="margin-top:6px">※ 上の配列はサンプルです。フォームの実際の entry ID と一致させてください。</div>
+    </div>
+
+  </div>
 
 </div>
 
 <script>
-/* ===========================
-   Googleフォーム連携設定（必ず確認してください）
-   - 下の ENTRY_MAP は、あなたが提示した URL に含まれていた entry.* を元に作成しています。
-   - フォームを編集すると entry ID が変わるため、実際のフォーム HTML（開発者ツール）で
-     name="entry.XXXXX" を確認し、必要ならここを更新してください。
-   =========================== */
 const GOOGLE_FORM_ACTION = "https://docs.google.com/forms/d/e/1FAIpQLSeY4hJIo8fqT__MURh4__OJCJJFC7OuAIN0m93NezKSxWwXhA/formResponse";
 
-/*
-  ENTRY_MAP: キー名 -> entry.XXXXX
-  ※ 必ずフォーム側の entry ID と照合してください（ここはサンプルマッピングです）。
-*/
-const ENTRY_MAP = {
-  // スプレッドシートヘッダ順に合わせたキー名
-  timestamp: null,                    // タイムスタンプ（フォーム側で自動付与されるため通常不要）
-  patientId: "entry.1408149842",     // 患者ID（記述式 必須）
-  examDate: "entry.682524855",       // 採血日（日時 必須）
-  K: "entry.902839305",
-  Ca: "entry.1282247271",
-  Alb: "entry.553676846",
-  P: "entry.1122270247",
-  iPTH: "entry.828508291",
-  Hb: "entry.1432055817",
-  Fe: "entry.269083043",
-  TIBC: "entry.905449551",
-  Ferritin: "entry.1043305105",
-  BUNpre: "entry.1271587686",
-  BUNpost: "entry.2051670408",
-  dialysisTime: "entry.1989053109",  // 透析時間 分
-  UF: "entry.1017877093",            // 除水量 kg
-  height: "entry.2020297135",        // 身長 cm
-  weightPre: "entry.1596697131",     // 透析前体重 kg
-  weightPost: "entry.2120517553",    // 透析後体重 kg
-  correctedCa: "entry.1346758513",   // 補正Ca
-  GNRI: "entry.1014469604",          // GNRI
-  spKtV: "entry.1879519402",         // spKt/V
-  nPCR: "entry.522730033",           // nPCR
-  saltEst: "entry.1468863185",       // 塩分推定（saltEst）
-  logicVersion: "entry.1563221666",  // 計算ロジックバージョン
-  ceComment: "entry.1563221666",     // CEコメント（段落） ← 要確認：フォームの実際の entry を確認して重複を避けてください
-  nriJH: "entry.1596697131"          // NRI-JH ← 要確認：ID が weightPre と重複している可能性があるため確認してください
-};
-
-/*
-  ENTRY_ORDER: スプレッドシートの列順（ヘッダ行）に合わせたキー配列
-  この順序で必ず全フィールド（空欄も含む）を送信します。
-  ヘッダと完全一致させてください。
-*/
-const ENTRY_ORDER = [
-  "timestamp",
-  "patientId",
-  "examDate",
-  "K",
-  "Ca",
-  "Alb",
-  "P",
-  "iPTH",
-  "Hb",
-  "Fe",
-  "TIBC",
-  "Ferritin",
-  "BUNpre",
-  "BUNpost",
-  "dialysisTime",
-  "UF",
-  "height",
-  "weightPre",
-  "weightPost",
-  "correctedCa",
-  "GNRI",
-  "spKtV",
-  "nPCR",
-  "saltEst",
-  "logicVersion",
-  "ceComment",
-  "nriJH"
-];
-
-/* ===========================
-   ユーティリティ
-   =========================== */
 function el(id){ return document.getElementById(id); }
 
-function getNumValue(id){
-  const e = el(id);
-  if(!e) return null;
-  const v = e.value;
-  if(v === "" || v == null) return null;
-  const n = parseFloat(String(v).replace(/,/g,''));
-  return Number.isFinite(n) ? n : null;
-}
+// previewMapping: プレビュー表示（送信される name と value の一覧）
+function previewMapping(){
+  // debug 配列を eval して ENTRY_ORDER と ENTRY_IDS を取得（ユーザーが編集可能）
+  let txt = el("debugEntryIds").value;
+  // 安全のため eval を限定的に使う：配列リテラルを抽出して JSON.parse で処理
+  // まず配列リテラルをすべて抽出
+  const arrMatches = txt.match(/
 
-function fmt(n, digits=2){
-  return n==null ? "—" : Number(n).toFixed(digits);
-}
+\[([\s\S]*?)\]
 
-function escapeHtml(s){
-  return String(s || "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
-}
-
-function judgeValue(v, min, max){
-  if(v == null) return "";
-  if(min != null && v < min) return "warn";
-  if(max != null && v > max) return "warn";
-  return "ok";
-}
-
-function row(name, val, target, min, max){
-  const j = judgeValue(val, min, max);
-  const label = j==="ok" ? '<span class="ok">OK</span>' : j==="warn" ? '<span class="warn">要対応</span>' : '';
-  return `
-<tr>
-  <td>${escapeHtml(name)}</td>
-  <td>${val!=null?fmt(val):"—"}</td>
-  <td>${escapeHtml(target)}</td>
-  <td>${label}</td>
-</tr>`;
-}
-
-/* ===========================
-   解析関数 calc
-   =========================== */
-function calc(){
-  const K = getNumValue("K");
-  const Ca = getNumValue("Ca");
-  const Alb = getNumValue("Alb");
-  const P = getNumValue("P");
-  const iPTH = getNumValue("iPTH");
-  const Hb = getNumValue("Hb");
-  const Fe = getNumValue("Fe");
-  const TIBC = getNumValue("TIBC");
-  const Ferritin = getNumValue("Ferritin");
-  const BUNpre = getNumValue("BUNpre");
-  const BUNpost = getNumValue("BUNpost");
-  const dialysisTime = getNumValue("dialysisTime");
-  const UF = getNumValue("UF");
-  const height = getNumValue("height");
-  const weightPre = getNumValue("weightPre");
-
-  const BMI = getNumValue("BMI");
-  const Cr = getNumValue("Cr");
-  const TCHO = getNumValue("TCHO");
-
-  // 補正Ca
-  let correctedCa = null;
-  if(Ca != null && Alb != null){
-    correctedCa = Ca + 0.8 * (4 - Alb);
-  }
-
-  // TSAT
-  let TSAT = null;
-  if(Fe != null && TIBC != null && TIBC !== 0){
-    TSAT = (Fe / TIBC) * 100;
-  }
-
-  // spKt/V（安定化）
-  let spKtV = null;
-  if(BUNpre != null && BUNpost != null && dialysisTime != null && weightPre != null && BUNpre > 0){
-    const t = dialysisTime / 60;
-    const R = BUNpost / BUNpre;
-    const arg = R - 0.008 * t;
-    if(arg > 0){
-      const ufRatio = (UF != null && weightPre !== 0) ? (UF / weightPre) : 0;
-      try{
-        const val = -Math.log(arg) + (4 - 3.5 * R) * ufRatio;
-        spKtV = Number.isFinite(val) ? val : null;
-      }catch(e){
-        spKtV = null;
-      }
-    } else {
-      spKtV = null;
-    }
-  }
-
-  // GNRI
-  let GNRI = null;
-  if(Alb != null && height != null && weightPre != null && height > 0){
-    const ideal = 22 * Math.pow(height / 100, 2);
-    if(ideal > 0){
-      GNRI = 1.489 * (Alb * 10) + 41.7 * (weightPre / ideal);
-      if(!Number.isFinite(GNRI)) GNRI = null;
-    }
-  }
-
-  // NRI-JH
-  let NRIJH = 0;
-  const nriInputsPresent = (BMI != null || Alb != null || Cr != null || TCHO != null);
-  if(nriInputsPresent){
-    if(BMI != null && BMI < 20) NRIJH += 1;
-    if(Alb != null && Alb < 3.6) NRIJH += 1;
-    if(Cr != null && Cr < 10) NRIJH += 1;
-    if(TCHO != null && TCHO < 130) NRIJH += 1;
-  } else {
-    NRIJH = "";
-  }
-
-  // 結果表示
-  let html = "";
-  html += `<h2>患者ID: ${escapeHtml(el("patientId").value || "—")}</h2>`;
-  html += `<div class="kpi-grid">
-    <div class="kpi"><div class="label">spKt/V</div><div class="value">${spKtV!=null?fmt(spKtV,2):"—"}</div></div>
-    <div class="kpi"><div class="label">GNRI</div><div class="value">${GNRI!=null?fmt(GNRI,1):"—"}</div></div>
-    <div class="kpi"><div class="label">補正Ca</div><div class="value">${correctedCa!=null?fmt(correctedCa,2):"—"}</div></div>
-    <div class="kpi"><div class="label">NRI-JH</div><div class="value">${NRIJH!==""?escapeHtml(String(NRIJH)):"—"}</div></div>
-  </div>`;
-
-  html += `<table>
-    <tr><th>項目</th><th>値</th><th>目標</th><th>判定</th></tr>`;
-  html += row("K", K, "3.5-5.5", 3.5, 5.5);
-  html += row("Hb", Hb, "10-12", 10, 12);
-  html += row("P", P, "3.5-5.5", 3.5, 5.5);
-  html += row("TSAT", TSAT, "20以上", 20, null);
-  html += row("Ferritin", Ferritin, "100-300", 100, 300);
-  html += row("補正Ca", correctedCa, "8.4-9.5", 8.4, 9.5);
-  html += row("spKt/V", spKtV, "1.4以上", 1.4, null);
-  html += row("GNRI", GNRI, "92以上", 92, null);
-  html += `</table>`;
-
-  const comment = el("ceComment").value || "なし";
-  html += `<div class="historyBox"><b>CEコメント</b><br>${escapeHtml(comment)}</div>`;
-
-  el("results").innerHTML = html;
-  el("results").style.display = "block";
-}
-
-/* ===========================
-   Googleフォーム送信（順序固定・空欄も送る）
-   - ENTRY_MAP と ENTRY_ORDER をフォームの実際の entry ID に合わせて必ず確認してください
-   - hidden iframe を使い、二重送信防止とフォールバックを実装
-   =========================== */
-let isSubmitting = false;
-
-function submitToGoogleFormOrdered(){
-  if(isSubmitting) return;
-  isSubmitting = true;
-  el("status").textContent = "送信中...";
-  const btn = el("btnSend");
-  if(btn) btn.disabled = true;
-
-  const form = document.createElement("form");
-  form.method = "POST";
-  form.action = GOOGLE_FORM_ACTION;
-  form.target = "hidden_iframe";
-
-  // ENTRY_ORDER の順で必ず全フィールドを追加（値が無ければ空文字）
-  ENTRY_ORDER.forEach(key => {
-    const entryName = ENTRY_MAP[key];
-    if(!entryName) {
-      // timestamp 等、フォーム側で自動付与される項目は送信しない
-      return;
-    }
-    const input = document.createElement("input");
-    input.type = "hidden";
-    input.name = entryName;
-    // 送る値は、ページ上の id と同じキー名を参照する設計
-    const sourceEl = el(key);
-    input.value = sourceEl ? (sourceEl.value || "") : "";
-    form.appendChild(input);
-  });
-
-  document.body.appendChild(form);
-
-  // iframe 準備
-  let iframe = document.getElementById("hidden_iframe");
-  if(!iframe){
-    iframe = document.createElement("iframe");
-    iframe.name = "hidden_iframe";
-    iframe.id = "hidden_iframe";
-    iframe.style.display = "none";
-    document.body.appendChild(iframe);
-  }
-
-  let done = false;
-  function finish(ok){
-    if(done) return;
-    done = true;
-    isSubmitting = false;
-    if(btn) btn.disabled = false;
-    try{ form.remove(); }catch(e){}
-    el("status").innerHTML = ok ? "<span class='ok'>送信完了</span>" : "<span class='warn'>送信失敗</span>";
-  }
-
-  // onload で完了判定（クロスオリジンで確実ではないためフォールバックあり）
-  iframe.onload = function(){ finish(true); };
-
-  // フォールバック：10秒後に完了扱い
-  const fallbackTimer = setTimeout(() => { finish(true); }, 10000);
-
-  try{
-    form.submit();
-  }catch(e){
-    clearTimeout(fallbackTimer);
-    finish(false);
-  }
-}
-
-/* ===========================
-   その他ユーティリティ
-   =========================== */
-function clearForm(){
-  if(!confirm("入力をクリアしますか？")) return;
-  document.querySelectorAll("input,textarea,select").forEach(e => {
-    if(e.type === "date" || e.type === "text" || e.type === "number" || e.tagName.toLowerCase() === "textarea"){
-      e.value = "";
-    }
-  });
-  el("results").style.display = "none";
-  el("historyArea").style.display = "none";
-  el("status").innerHTML = "";
-  setToday();
-}
-
-function setToday(){
-  const d = new Date();
-  const s = d.toISOString().slice(0,10);
-  if(el("examDate")) el("examDate").value = s;
-}
-
-function loadHistory(){
-  const patientId = el("patientId").value;
-  if(!patientId){
-    alert("患者IDを入力してください");
+/g);
+  if(!arrMatches || arrMatches.length < 2){
+    el("previewBox").style.display = "block";
+    el("previewBox").textContent = "ERROR: debugEntryIds の形式が正しくありません。2つの配列リテラル（ENTRY_ORDER と ENTRY_IDS）を含めてください。";
     return;
   }
-  el("historyArea").style.display = "block";
-  el("historyContent").innerHTML = `
-    <div class="historyBox">
-      <b>患者ID ${escapeHtml(patientId)}</b><br><br>
-      2026-05-01<br>
-      Hb 10.5 / Alb 3.5 / K 4.4<br>
-      spKt/V 1.42<br><br>
-      2026-04-01<br>
-      Hb 9.8 / Alb 3.2 / K 5.0<br>
-      spKt/V 1.31
-    </div>
-  `;
+  try{
+    const orderJson = arrMatches[0];
+    const idsJson = arrMatches[1];
+    const ENTRY_ORDER = JSON.parse(orderJson.replace(/(['"])?([a-zA-Z0-9_]+)(['"])?/g, function(m,q1,key,q3){
+      // ensure strings are quoted for JSON.parse if not already
+      if(q1) return m;
+      return '"'+key+'"';
+    }));
+    const ENTRY_IDS = JSON.parse(idsJson.replace(/(['"])?(entry\.\d+|[a-zA-Z0-9_]+)(['"])?/g, function(m,q1,key,q3){
+      if(q1) return m;
+      return '"'+key+'"';
+    }));
+    if(ENTRY_ORDER.length !== ENTRY_IDS.length){
+      el("previewBox").style.display = "block";
+      el("previewBox").textContent = "ERROR: ENTRY_ORDER と ENTRY_IDS の長さが一致しません。順序配列と ID 配列は同じ長さである必要があります。";
+      return;
+    }
+
+    // 送信データを組み立て（空欄も含む）
+    const pairs = [];
+    ENTRY_ORDER.forEach((key, idx) => {
+      const entryName = ENTRY_IDS[idx] || "";
+      // 値はページ上の id と同じキー名を参照（存在しなければ空）
+      const sourceEl = document.getElementById(key);
+      const value = sourceEl ? (sourceEl.value || "") : "";
+      pairs.push({colKey:key, entry:entryName, value:value});
+    });
+
+    // プレビュー表示
+    let out = "送信プレビュー（左からスプレッドシート列順）\n\n";
+    out += "列キー\t\tentry name\t\tvalue\n";
+    out += "------------------------------------------------------------\n";
+    pairs.forEach(p=>{
+      out += `${p.colKey}\t${p.entry}\t${p.value}\n`;
+    });
+    el("previewBox").style.display = "block";
+    el("previewBox").textContent = out;
+    el("status").textContent = "プレビュー表示しました。内容を確認してください。";
+  }catch(e){
+    el("previewBox").style.display = "block";
+    el("previewBox").textContent = "ERROR: プレビュー生成中に例外が発生しました。debugEntryIds の形式を確認してください。\n"+e;
+  }
 }
 
-/* 初期化 */
-setToday();
+// submitToGoogleFormOrdered: preview で使う配列を読み取り、順序固定で送信
+let isSubmitting = false;
+function submitToGoogleFormOrdered(){
+  if(isSubmitting) return;
+  // まずプレビューを表示してユーザーに確認させることを強制
+  if(el("previewBox").style.display === "none"){
+    alert("まず「プレビュー（送信データ確認）」を押して、entry と値の対応を確認してください。");
+    return;
+  }
 
+  // 取得 debug 配列
+  let txt = el("debugEntryIds").value;
+  const arrMatches = txt.match(/
+
+\[([\s\S]*?)\]
+
+/g);
+  if(!arrMatches || arrMatches.length < 2){
+    alert("debugEntryIds の形式が正しくありません。");
+    return;
+  }
+  try{
+    const orderJson = arrMatches[0];
+    const idsJson = arrMatches[1];
+    const ENTRY_ORDER = JSON.parse(orderJson.replace(/(['"])?([a-zA-Z0-9_]+)(['"])?/g, function(m,q1,key,q3){
+      if(q1) return m;
+      return '"'+key+'"';
+    }));
+    const ENTRY_IDS = JSON.parse(idsJson.replace(/(['"])?(entry\.\d+|[a-zA-Z0-9_]+)(['"])?/g, function(m,q1,key,q3){
+      if(q1) return m;
+      return '"'+key+'"';
+    }));
+    if(ENTRY_ORDER.length !== ENTRY_IDS.length){
+      alert("ENTRY_ORDER と ENTRY_IDS の長さが一致しません。");
+      return;
+    }
+
+    // 確認ダイアログ（最終確認）
+    if(!confirm("送信を実行します。よろしいですか？（送信後はスプレッドシートで結果を確認してください）")) return;
+
+    isSubmitting = true;
+    el("status").textContent = "送信中...";
+    const btn = document.getElementById("btnSend");
+    if(btn) btn.disabled = true;
+
+    const form = document.createElement("form");
+    form.method = "POST";
+    form.action = GOOGLE_FORM_ACTION;
+    form.target = "hidden_iframe";
+
+    ENTRY_ORDER.forEach((key, idx) => {
+      const entryName = ENTRY_IDS[idx] || "";
+      if(!entryName) return; // timestamp 等は送らない
+      const input = document.createElement("input");
+      input.type = "hidden";
+      input.name = entryName;
+      const sourceEl = document.getElementById(key);
+      input.value = sourceEl ? (sourceEl.value || "") : "";
+      form.appendChild(input);
+    });
+
+    document.body.appendChild(form);
+
+    let iframe = document.getElementById("hidden_iframe");
+    if(!iframe){
+      iframe = document.createElement("iframe");
+      iframe.name = "hidden_iframe";
+      iframe.id = "hidden_iframe";
+      iframe.style.display = "none";
+      document.body.appendChild(iframe);
+    }
+
+    let done = false;
+    function finish(ok){
+      if(done) return;
+      done = true;
+      isSubmitting = false;
+      if(btn) btn.disabled = false;
+      try{ form.remove(); }catch(e){}
+      el("status").innerHTML = ok ? "<span class='ok'>送信完了</span>" : "<span class='warn'>送信失敗</span>";
+    }
+
+    iframe.onload = function(){ finish(true); };
+    const fallbackTimer = setTimeout(()=> finish(true), 10000);
+
+    try{
+      form.submit();
+    }catch(e){
+      clearTimeout(fallbackTimer);
+      finish(false);
+    }
+
+  }catch(e){
+    alert("送信準備中にエラーが発生しました。debugEntryIds を確認してください。\n"+e);
+    return;
+  }
+}
+
+// 初期化：採血日に今日をセット
+(function setToday(){
+  const d = new Date();
+  const s = d.toISOString().slice(0,10);
+  const e = document.getElementById("examDate");
+  if(e) e.value = s;
+})();
 </script>
 </body>
 </html>
