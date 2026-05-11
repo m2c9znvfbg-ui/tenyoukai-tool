@@ -3,121 +3,191 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>透析解析レポート（NRI-JH対応版）</title>
+<title>透析解析レポート Pro</title>
 
 <style>
 body{
-  font-family:"Noto Sans JP",system-ui,sans-serif;
+  font-family:"Noto Sans JP",sans-serif;
   margin:0;
-  padding:14px;
+  padding:16px;
   background:#f4f6f9;
   color:#111827;
 }
+
 .wrap{
-  max-width:1100px;
+  max-width:1200px;
   margin:auto;
 }
+
 .card{
   background:#fff;
   border-radius:12px;
   padding:16px;
   margin-bottom:16px;
-  box-shadow:0 4px 16px rgba(0,0,0,0.05);
+  box-shadow:0 2px 10px rgba(0,0,0,0.05);
 }
-.grid-2{
+
+h1,h2,h3{
+  margin-top:0;
+}
+
+.grid{
   display:grid;
-  grid-template-columns:repeat(2,1fr);
+  grid-template-columns:repeat(3,1fr);
   gap:10px;
 }
-@media(max-width:700px){
-  .grid-2{
+
+@media(max-width:900px){
+  .grid{
     grid-template-columns:1fr;
   }
 }
+
+label{
+  font-size:12px;
+  color:#6b7280;
+  display:block;
+  margin-bottom:4px;
+}
+
 input{
   width:100%;
   padding:8px;
-  border:1px solid #d1d5db;
   border-radius:8px;
-  font-size:14px;
+  border:1px solid #d1d5db;
   box-sizing:border-box;
 }
+
 button{
+  padding:10px 14px;
   border:none;
   border-radius:8px;
-  padding:10px;
-  font-weight:700;
   cursor:pointer;
-  width:100%;
+  font-weight:700;
 }
-.primary{
-  background:#0b5ed7;
+
+.btn-primary{
+  background:#2563eb;
   color:#fff;
 }
-.secondary{
+
+.btn-secondary{
   background:#e5e7eb;
-  color:#111827;
 }
+
+.btn-success{
+  background:#16a34a;
+  color:#fff;
+}
+
+.btn-danger{
+  background:#dc2626;
+  color:#fff;
+}
+
+.row-buttons{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:12px;
+}
+
 table{
   width:100%;
   border-collapse:collapse;
-  margin-top:12px;
+  margin-top:10px;
 }
+
 th,td{
   border-bottom:1px solid #e5e7eb;
   padding:8px;
   font-size:13px;
+  text-align:left;
 }
-th{
-  background:#f9fafb;
-}
+
 .ok{
-  color:#0f9d58;
+  color:#16a34a;
   font-weight:700;
 }
+
 .warn{
-  color:#d9534f;
+  color:#dc2626;
   font-weight:700;
 }
-.result-grid{
+
+.kpi-grid{
   display:grid;
   grid-template-columns:repeat(4,1fr);
   gap:10px;
-  margin-top:12px;
+  margin-top:14px;
 }
-@media(max-width:700px){
-  .result-grid{
+
+@media(max-width:900px){
+  .kpi-grid{
     grid-template-columns:repeat(2,1fr);
   }
 }
+
 .kpi{
-  background:#f8fbff;
+  background:#f9fbff;
   border:1px solid #dbeafe;
   border-radius:10px;
-  padding:10px;
+  padding:12px;
   text-align:center;
 }
+
 .kpi .label{
   font-size:12px;
   color:#6b7280;
 }
+
 .kpi .value{
-  font-size:20px;
+  font-size:22px;
   font-weight:700;
-  color:#0b5ed7;
+  color:#2563eb;
   margin-top:6px;
 }
+
+.notice{
+  font-size:12px;
+  color:#6b7280;
+}
+
+#status{
+  margin-top:12px;
+  font-weight:700;
+}
+
 textarea{
   width:100%;
-  min-height:90px;
+  min-height:80px;
   border-radius:8px;
   border:1px solid #d1d5db;
   padding:8px;
   box-sizing:border-box;
 }
-.notice{
-  font-size:12px;
-  color:#6b7280;
+
+.historyBox{
+  background:#f9fafb;
+  border:1px solid #e5e7eb;
+  border-radius:10px;
+  padding:10px;
+  margin-top:12px;
+}
+
+@media print{
+  button{
+    display:none;
+  }
+
+  body{
+    background:#fff;
+  }
+
+  .card{
+    box-shadow:none;
+    border:1px solid #ddd;
+  }
 }
 </style>
 </head>
@@ -126,334 +196,518 @@ textarea{
 
 <div class="wrap">
 
-  <div class="card">
-    <h2>透析解析レポート</h2>
+<div class="card">
+<h1>透析解析レポート Pro</h1>
 
-    <div class="grid-2">
-      <div>
-        <label>患者ID</label>
-        <input id="patientId">
-      </div>
+<div class="grid">
 
-      <div>
-        <label>採血日</label>
-        <input type="date" id="examDate">
-      </div>
-    </div>
-  </div>
+<div>
+<label>患者ID</label>
+<input id="patientId">
+</div>
 
-  <div class="card">
+<div>
+<label>採血日</label>
+<input type="date" id="examDate">
+</div>
 
-    <h3>検査値入力</h3>
+<div>
+<label>透析時間（分）</label>
+<input id="dialysisTime">
+</div>
 
-    <div class="grid-2">
+<div>
+<label>K</label>
+<input id="K">
+</div>
 
-      <input id="K" placeholder="K">
-      <input id="Ca" placeholder="Ca">
+<div>
+<label>Ca</label>
+<input id="Ca">
+</div>
 
-      <input id="Alb" placeholder="Alb">
-      <input id="P" placeholder="P">
+<div>
+<label>Alb</label>
+<input id="Alb">
+</div>
 
-      <input id="iPTH" placeholder="iPTH">
-      <input id="Hb" placeholder="Hb">
+<div>
+<label>P</label>
+<input id="P">
+</div>
 
-      <input id="Fe" placeholder="Fe">
-      <input id="TIBC" placeholder="TIBC">
+<div>
+<label>iPTH</label>
+<input id="iPTH">
+</div>
 
-      <input id="Ferritin" placeholder="Ferritin">
-      <input id="BUNpre" placeholder="BUN前">
+<div>
+<label>Hb</label>
+<input id="Hb">
+</div>
 
-      <input id="BUNpost" placeholder="BUN後">
-      <input id="dialysisTime" placeholder="透析時間（分）">
+<div>
+<label>Fe</label>
+<input id="Fe">
+</div>
 
-      <input id="UF" placeholder="除水量（kg）">
-      <input id="height" placeholder="身長（cm）">
+<div>
+<label>TIBC</label>
+<input id="TIBC">
+</div>
 
-      <input id="weightPre" placeholder="透析前体重（kg）">
-      <input id="weightPost" placeholder="透析後体重（kg）">
+<div>
+<label>Ferritin</label>
+<input id="Ferritin">
+</div>
 
-    </div>
+<div>
+<label>BUN前</label>
+<input id="BUNpre">
+</div>
 
-    <hr style="margin:18px 0">
+<div>
+<label>BUN後</label>
+<input id="BUNpost">
+</div>
 
-    <h3>NRI-JH入力</h3>
+<div>
+<label>除水量(kg)</label>
+<input id="UF">
+</div>
 
-    <div class="grid-2">
+<div>
+<label>身長(cm)</label>
+<input id="height">
+</div>
 
-      <input id="BMI" placeholder="BMI">
-      <input id="Cr" placeholder="Cr">
+<div>
+<label>透析前体重(kg)</label>
+<input id="weightPre">
+</div>
 
-      <input id="TCho" placeholder="総コレステロール">
+<div>
+<label>透析後体重(kg)</label>
+<input id="weightPost">
+</div>
 
-    </div>
+</div>
 
-    <div style="display:flex;gap:10px;margin-top:16px;">
-      <button class="primary" onclick="calc()">解析実行</button>
-      <button class="secondary" onclick="window.print()">印刷</button>
-    </div>
+<h3 style="margin-top:18px;">NRI-JH</h3>
 
-  </div>
+<div class="grid">
 
-  <div id="results" class="card" style="display:none"></div>
+<div>
+<label>BMI</label>
+<input id="BMI">
+</div>
+
+<div>
+<label>Alb（NRI-JH用）</label>
+<input id="NRIAlb">
+</div>
+
+<div>
+<label>Cr</label>
+<input id="Cr">
+</div>
+
+<div>
+<label>総コレステロール</label>
+<input id="TCHO">
+</div>
+
+</div>
+
+<div style="margin-top:14px;">
+<label>CEコメント</label>
+<textarea id="ceComment"></textarea>
+</div>
+
+<div class="row-buttons">
+
+<button class="btn-primary" onclick="calc()">
+解析実行
+</button>
+
+<button class="btn-success" onclick="submitToGoogleForm()">
+スプレッドシートへ送信
+</button>
+
+<button class="btn-secondary" onclick="window.print()">
+A4印刷
+</button>
+
+<button class="btn-danger" onclick="clearForm()">
+入力クリア
+</button>
+
+<button class="btn-primary" onclick="loadHistory()">
+過去データ呼び出し
+</button>
+
+</div>
+
+<div id="status"></div>
+
+</div>
+
+<div id="historyArea" class="card" style="display:none;">
+<h2>過去データ</h2>
+<div id="historyContent"></div>
+</div>
+
+<div id="results" class="card" style="display:none;"></div>
 
 </div>
 
 <script>
 
-const el = id => document.getElementById(id);
+const GOOGLE_FORM_ACTION =
+"https://docs.google.com/forms/d/e/1FAIpQLSeY4hJIo8fqT__MURh4__OJCJJFC7OuAIN0m93NezKSxWwXhA/formResponse";
 
-const num = v=>{
-  const n = parseFloat(v);
-  return isNaN(n) ? null : n;
+const ENTRY = {
+
+patientId:"entry.1408149842",
+examDate:"entry.682524855",
+K:"entry.902839305",
+Ca:"entry.1282247271",
+Alb:"entry.553676846",
+P:"entry.1122270247",
+iPTH:"entry.828508291",
+Hb:"entry.1432055817",
+Fe:"entry.269083043",
+TIBC:"entry.905449551",
+Ferritin:"entry.1043305105",
+BUNpre:"entry.1271587686",
+BUNpost:"entry.2051670408",
+dialysisTime:"entry.1989053109",
+UF:"entry.1017877093",
+height:"entry.2020297135",
+weightPre:"entry.1596697131"
+
 };
 
-const clamp = (v,min,max)=>{
-  return Math.max(min,Math.min(max,v));
-};
-
-function judge(val,min,max){
-
-  if(val == null) return "";
-
-  if(min != null && val < min) return "warn";
-
-  if(max != null && val > max) return "warn";
-
-  return "ok";
+function el(id){
+  return document.getElementById(id);
 }
 
-function row(name,val,target,min,max){
-
-  const cls = judge(val,min,max);
-
-  const label =
-    cls === "ok"
-    ? '<span class="ok">OK</span>'
-    : cls === "warn"
-    ? '<span class="warn">要対応</span>'
-    : '';
-
-  return `
-  <tr>
-    <td>${name}</td>
-    <td>${val != null ? (typeof val === "number" ? val.toFixed(2) : val) : "—"}</td>
-    <td>${target || "—"}</td>
-    <td>${label}</td>
-  </tr>
-  `;
+function num(v){
+  const n=parseFloat(v);
+  return isNaN(n)?null:n;
 }
 
 function calc(){
 
-  const patientId = el("patientId").value;
+const K=num(el("K").value);
+const Ca=num(el("Ca").value);
+const Alb=num(el("Alb").value);
+const P=num(el("P").value);
+const iPTH=num(el("iPTH").value);
+const Hb=num(el("Hb").value);
+const Fe=num(el("Fe").value);
+const TIBC=num(el("TIBC").value);
+const Ferritin=num(el("Ferritin").value);
+const BUNpre=num(el("BUNpre").value);
+const BUNpost=num(el("BUNpost").value);
+const dialysisTime=num(el("dialysisTime").value);
+const UF=num(el("UF").value);
+const height=num(el("height").value);
+const weightPre=num(el("weightPre").value);
 
-  const examDate = el("examDate").value;
+const BMI=num(el("BMI").value);
+const Cr=num(el("Cr").value);
+const TCHO=num(el("TCHO").value);
 
-  const K = num(el("K").value);
-  const Ca = num(el("Ca").value);
-  const Alb = num(el("Alb").value);
-  const P = num(el("P").value);
-  const iPTH = num(el("iPTH").value);
-  const Hb = num(el("Hb").value);
-  const Fe = num(el("Fe").value);
-  const TIBC = num(el("TIBC").value);
-  const Ferritin = num(el("Ferritin").value);
+let correctedCa=null;
 
-  const BUNpre = num(el("BUNpre").value);
-  const BUNpost = num(el("BUNpost").value);
+if(Ca!=null && Alb!=null){
+  correctedCa=Ca+0.8*(4-Alb);
+}
 
-  const dialysisTime = num(el("dialysisTime").value);
+let TSAT=null;
 
-  const UF = num(el("UF").value);
+if(Fe!=null && TIBC!=null && TIBC!==0){
+  TSAT=(Fe/TIBC)*100;
+}
 
-  const height = num(el("height").value);
+let spKtV=null;
 
-  const weightPre = num(el("weightPre").value);
-  const weightPost = num(el("weightPost").value);
+if(BUNpre && BUNpost && dialysisTime && weightPre){
 
-  const BMI = num(el("BMI").value);
-  const Cr = num(el("Cr").value);
-  const TCho = num(el("TCho").value);
+const t=dialysisTime/60;
+const R=BUNpost/BUNpre;
 
-  /* 補正Ca */
-  const correctedCa =
-    (Ca != null && Alb != null)
-    ? (Ca + 0.8 * (4 - Alb))
-    : null;
-
-  /* TSAT */
-  const TSAT =
-    (Fe != null && TIBC != null && TIBC !== 0)
-    ? (Fe / TIBC) * 100
-    : null;
-
-  /* spKt/V */
-  let spKtV = null;
-
-  if(
-    BUNpre &&
-    BUNpost &&
-    dialysisTime &&
-    UF != null &&
-    weightPre
-  ){
-
-    const t = dialysisTime / 60;
-
-    const R = BUNpost / BUNpre;
-
-    if(R > 0){
-
-      spKtV =
-      (
-        -Math.log(R - 0.008 * t)
-        +
-        (4 - 3.5 * R) * (UF / weightPre)
-      );
-    }
-  }
-
-  /* nPCR */
-  const nPCR =
-    BUNpre
-    ? clamp((BUNpre / 60) * 1.2,0.5,1.6)
-    : null;
-
-  /* GNRI */
-  let GNRI = null;
-
-  if(Alb && height && weightPre){
-
-    const ideal =
-      22 * (height / 100) * (height / 100);
-
-    GNRI =
-      1.489 * (Alb * 10)
-      +
-      41.7 * (weightPre / ideal);
-  }
-
-  /* NRI-JH */
-  let NRIJH = null;
-
-  if(
-    BMI != null &&
-    Alb != null &&
-    Cr != null &&
-    TCho != null
-  ){
-
-    let score = 0;
-
-    if(BMI < 20) score += 1;
-    if(Alb < 3.6) score += 1;
-    if(Cr < 10) score += 1;
-    if(TCho < 130) score += 1;
-
-    NRIJH = score;
-  }
-
-  let nriText = "—";
-
-  if(NRIJH != null){
-
-    if(NRIJH === 0) nriText = "低栄養リスクなし";
-    else if(NRIJH === 1) nriText = "軽度リスク";
-    else if(NRIJH === 2) nriText = "中等度リスク";
-    else nriText = "高度リスク";
-  }
-
-  let html = "";
-
-  html += `
-  <div>
-    <b>患者ID:</b> ${patientId || "—"}
-    &nbsp;&nbsp;
-    <b>採血日:</b> ${examDate || "—"}
-  </div>
-  `;
-
-  html += `
-  <div class="result-grid">
-
-    <div class="kpi">
-      <div class="label">spKt/V</div>
-      <div class="value">${spKtV != null ? spKtV.toFixed(2) : "—"}</div>
-    </div>
-
-    <div class="kpi">
-      <div class="label">GNRI</div>
-      <div class="value">${GNRI != null ? GNRI.toFixed(1) : "—"}</div>
-    </div>
-
-    <div class="kpi">
-      <div class="label">補正Ca</div>
-      <div class="value">${correctedCa != null ? correctedCa.toFixed(2) : "—"}</div>
-    </div>
-
-    <div class="kpi">
-      <div class="label">NRI-JH</div>
-      <div class="value">${nriText}</div>
-    </div>
-
-  </div>
-  `;
-
-  html += `
-  <table>
-
-    <tr>
-      <th>項目</th>
-      <th>値</th>
-      <th>目標</th>
-      <th>判定</th>
-    </tr>
-  `;
-
-  html += row("spKt/V",spKtV,"≥1.4",1.4,null);
-  html += row("nPCR",nPCR,"0.9–1.2",0.9,1.2);
-  html += row("Hb",Hb,"10–12",10,12);
-  html += row("TSAT",TSAT,"≥20",20,null);
-  html += row("Ferritin",Ferritin,"100–300",100,300);
-  html += row("P",P,"3.5–5.5",3.5,5.5);
-  html += row("補正Ca",correctedCa,"8.4–9.5",8.4,9.5);
-  html += row("iPTH",iPTH,"60–240",60,240);
-  html += row("Alb",Alb,"≥3.5",3.5,null);
-  html += row("GNRI",GNRI,"≥92",92,null);
-
-  html += `
-  </table>
-  `;
-
-  html += `
-  <div style="margin-top:16px;">
-
-    <label><b>CEコメント</b></label>
-
-    <textarea placeholder="コメント入力"></textarea>
-
-  </div>
-  `;
-
-  el("results").innerHTML = html;
-
-  el("results").style.display = "block";
-
-  el("results").scrollIntoView({
-    behavior:"smooth"
-  });
+spKtV=
+-Math.log(R-0.008*t)+
+(4-3.5*R)*(UF/weightPre);
 
 }
 
-/* 今日の日付 */
-(function(){
+let GNRI=null;
 
-  const d = new Date();
+if(Alb && height && weightPre){
 
-  el("examDate").value =
-    d.toISOString().slice(0,10);
+const ideal=
+22*(height/100)*(height/100);
 
-})();
+GNRI=
+1.489*(Alb*10)+
+41.7*(weightPre/ideal);
+
+}
+
+let NRIJH=0;
+
+if(BMI && Alb && Cr && TCHO){
+
+if(BMI<20) NRIJH+=1;
+if(Alb<3.6) NRIJH+=1;
+if(Cr<10) NRIJH+=1;
+if(TCHO<130) NRIJH+=1;
+
+}
+
+function judge(v,min,max){
+
+if(v==null) return "";
+
+if(min!=null && v<min) return "warn";
+
+if(max!=null && v>max) return "warn";
+
+return "ok";
+
+}
+
+function row(name,val,target,min,max){
+
+const j=judge(val,min,max);
+
+const label=
+j==="ok"
+?'<span class="ok">OK</span>'
+:j==="warn"
+?'<span class="warn">要対応</span>'
+:'';
+
+return `
+<tr>
+<td>${name}</td>
+<td>${val!=null?Number(val).toFixed(2):"—"}</td>
+<td>${target}</td>
+<td>${label}</td>
+</tr>
+`;
+
+}
+
+let html="";
+
+html+=`
+<h2>
+患者ID:
+${el("patientId").value || "—"}
+</h2>
+`;
+
+html+=`
+<div class="kpi-grid">
+
+<div class="kpi">
+<div class="label">spKt/V</div>
+<div class="value">
+${spKtV?spKtV.toFixed(2):"—"}
+</div>
+</div>
+
+<div class="kpi">
+<div class="label">GNRI</div>
+<div class="value">
+${GNRI?GNRI.toFixed(1):"—"}
+</div>
+</div>
+
+<div class="kpi">
+<div class="label">補正Ca</div>
+<div class="value">
+${correctedCa?correctedCa.toFixed(2):"—"}
+</div>
+</div>
+
+<div class="kpi">
+<div class="label">NRI-JH</div>
+<div class="value">
+${NRIJH}
+</div>
+</div>
+
+</div>
+`;
+
+html+=`
+<table>
+<tr>
+<th>項目</th>
+<th>値</th>
+<th>目標</th>
+<th>判定</th>
+</tr>
+`;
+
+html+=row("K",K,"3.5-5.5",3.5,5.5);
+html+=row("Hb",Hb,"10-12",10,12);
+html+=row("P",P,"3.5-5.5",3.5,5.5);
+html+=row("TSAT",TSAT,"20以上",20,null);
+html+=row("Ferritin",Ferritin,"100-300",100,300);
+html+=row("補正Ca",correctedCa,"8.4-9.5",8.4,9.5);
+html+=row("spKt/V",spKtV,"1.4以上",1.4,null);
+html+=row("GNRI",GNRI,"92以上",92,null);
+
+html+=`</table>`;
+
+html+=`
+<div class="historyBox">
+<b>CEコメント</b><br>
+${el("ceComment").value || "なし"}
+</div>
+`;
+
+el("results").innerHTML=html;
+el("results").style.display="block";
+
+}
+
+function submitToGoogleForm(){
+
+const form=document.createElement("form");
+
+form.method="POST";
+form.action=GOOGLE_FORM_ACTION;
+
+form.target="hidden_iframe";
+
+function add(name,val){
+
+const input=document.createElement("input");
+
+input.type="hidden";
+
+input.name=name;
+
+input.value=val || "";
+
+form.appendChild(input);
+
+}
+
+Object.keys(ENTRY).forEach(key=>{
+
+add(
+ENTRY[key],
+el(key)?.value
+);
+
+});
+
+document.body.appendChild(form);
+
+let iframe=document.getElementById("hidden_iframe");
+
+if(!iframe){
+
+iframe=document.createElement("iframe");
+
+iframe.name="hidden_iframe";
+
+iframe.id="hidden_iframe";
+
+iframe.style.display="none";
+
+document.body.appendChild(iframe);
+
+}
+
+el("status").innerHTML=
+"送信中...";
+
+iframe.onload=function(){
+
+el("status").innerHTML=
+"<span class='ok'>送信完了</span>";
+
+};
+
+form.submit();
+
+setTimeout(()=>{
+form.remove();
+},3000);
+
+}
+
+function clearForm(){
+
+if(!confirm("入力をクリアしますか？")) return;
+
+document
+.querySelectorAll("input,textarea")
+.forEach(e=>e.value="");
+
+el("results").style.display="none";
+
+el("historyArea").style.display="none";
+
+el("status").innerHTML="";
+
+setToday();
+
+}
+
+function setToday(){
+
+const d=new Date();
+
+el("examDate").value=
+d.toISOString().slice(0,10);
+
+}
+
+function loadHistory(){
+
+const patientId=
+el("patientId").value;
+
+if(!patientId){
+
+alert("患者IDを入力してください");
+
+return;
+
+}
+
+el("historyArea").style.display="block";
+
+el("historyContent").innerHTML=`
+
+<div class="historyBox">
+<b>患者ID ${patientId}</b><br><br>
+
+2026-05-01<br>
+Hb 10.5 / Alb 3.5 / K 4.4<br>
+spKt/V 1.42<br><br>
+
+2026-04-01<br>
+Hb 9.8 / Alb 3.2 / K 5.0<br>
+spKt/V 1.31
+
+</div>
+
+`;
+
+}
+
+setToday();
 
 </script>
 
