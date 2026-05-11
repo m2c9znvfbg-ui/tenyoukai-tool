@@ -3,16 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>透析解析レポート Pro（Googleフォーム連携版）</title>
-
+<title>透析解析レポート Pro（Googleフォーム連携 完全版）</title>
 <style>
-body{
-  font-family:"Noto Sans JP",sans-serif;
-  margin:0;
-  padding:16px;
-  background:#f4f6f9;
-  color:#111827;
-}
+body{ font-family:"Noto Sans JP",sans-serif; margin:0; padding:16px; background:#f4f6f9; color:#111827; }
 .wrap{ max-width:1200px; margin:auto; }
 .card{ background:#fff; border-radius:12px; padding:16px; margin-bottom:16px; box-shadow:0 2px 10px rgba(0,0,0,0.05); }
 h1,h2,h3{ margin-top:0; }
@@ -40,135 +33,127 @@ th,td{ border-bottom:1px solid #e5e7eb; padding:8px; font-size:13px; text-align:
 #status{ margin-top:12px; font-weight:700; }
 textarea{ min-height:80px; }
 .historyBox{ background:#f9fafb; border:1px solid #e5e7eb; border-radius:10px; padding:10px; margin-top:12px; }
-@media print{
-  button{ display:none; }
-  body{ background:#fff; }
-  .card{ box-shadow:none; border:1px solid #ddd; }
-}
+@media print{ button{ display:none; } body{ background:#fff; } .card{ box-shadow:none; border:1px solid #ddd; } }
 </style>
 </head>
-
 <body>
 <div class="wrap">
 
   <div class="card">
-    <h1>透析解析レポート Pro（Googleフォーム連携版）</h1>
+    <h1>透析解析レポート Pro（Googleフォーム連携 完全版）</h1>
 
     <div class="grid">
-
       <div>
-        <label for="patientId">患者ID</label>
-        <input id="patientId" aria-label="患者ID" type="text" placeholder="例: 123456">
+        <label for="patientId">患者ID（必須）</label>
+        <input id="patientId" type="text" placeholder="例: 123456" aria-label="患者ID">
       </div>
 
       <div>
-        <label for="examDate">採血日</label>
-        <input id="examDate" aria-label="採血日" type="date">
+        <label for="examDate">採血日（必須）</label>
+        <input id="examDate" type="date" aria-label="採血日">
       </div>
 
       <div>
         <label for="dialysisTime">透析時間（分）</label>
-        <input id="dialysisTime" aria-label="透析時間" type="number" step="1" min="0">
+        <input id="dialysisTime" type="number" step="1" min="0" aria-label="透析時間">
       </div>
 
       <div>
-        <label for="K">K (mmol/L)</label>
-        <input id="K" aria-label="K" type="number" step="0.1" min="0">
+        <label for="K">K</label>
+        <input id="K" type="number" step="0.1" min="0" aria-label="K">
       </div>
 
       <div>
-        <label for="Ca">Ca (mg/dL)</label>
-        <input id="Ca" aria-label="Ca" type="number" step="0.1" min="0">
+        <label for="Ca">Ca</label>
+        <input id="Ca" type="number" step="0.1" min="0" aria-label="Ca">
       </div>
 
       <div>
-        <label for="Alb">Alb (g/dL)</label>
-        <input id="Alb" aria-label="Alb" type="number" step="0.1" min="0">
+        <label for="Alb">Alb</label>
+        <input id="Alb" type="number" step="0.1" min="0" aria-label="Alb">
       </div>
 
       <div>
-        <label for="P">P (mg/dL)</label>
-        <input id="P" aria-label="P" type="number" step="0.1" min="0">
+        <label for="P">P</label>
+        <input id="P" type="number" step="0.1" min="0" aria-label="P">
       </div>
 
       <div>
-        <label for="iPTH">iPTH (pg/mL)</label>
-        <input id="iPTH" aria-label="iPTH" type="number" step="1" min="0">
+        <label for="iPTH">iPTH</label>
+        <input id="iPTH" type="number" step="1" min="0" aria-label="iPTH">
       </div>
 
       <div>
-        <label for="Hb">Hb (g/dL)</label>
-        <input id="Hb" aria-label="Hb" type="number" step="0.1" min="0">
+        <label for="Hb">Hb</label>
+        <input id="Hb" type="number" step="0.1" min="0" aria-label="Hb">
       </div>
 
       <div>
-        <label for="Fe">Fe (μg/dL)</label>
-        <input id="Fe" aria-label="Fe" type="number" step="1" min="0">
+        <label for="Fe">Fe</label>
+        <input id="Fe" type="number" step="1" min="0" aria-label="Fe">
       </div>
 
       <div>
-        <label for="TIBC">TIBC (μg/dL)</label>
-        <input id="TIBC" aria-label="TIBC" type="number" step="1" min="0">
+        <label for="TIBC">TIBC</label>
+        <input id="TIBC" type="number" step="1" min="0" aria-label="TIBC">
       </div>
 
       <div>
-        <label for="Ferritin">Ferritin (ng/mL)</label>
-        <input id="Ferritin" aria-label="Ferritin" type="number" step="1" min="0">
+        <label for="Ferritin">Ferritin</label>
+        <input id="Ferritin" type="number" step="1" min="0" aria-label="Ferritin">
       </div>
 
       <div>
-        <label for="BUNpre">BUN前 (mg/dL)</label>
-        <input id="BUNpre" aria-label="BUN前" type="number" step="0.1" min="0">
+        <label for="BUNpre">BUN前</label>
+        <input id="BUNpre" type="number" step="0.1" min="0" aria-label="BUN前">
       </div>
 
       <div>
-        <label for="BUNpost">BUN後 (mg/dL)</label>
-        <input id="BUNpost" aria-label="BUN後" type="number" step="0.1" min="0">
+        <label for="BUNpost">BUN後</label>
+        <input id="BUNpost" type="number" step="0.1" min="0" aria-label="BUN後">
       </div>
 
       <div>
         <label for="UF">除水量(kg)</label>
-        <input id="UF" aria-label="除水量" type="number" step="0.1" min="0">
+        <input id="UF" type="number" step="0.1" min="0" aria-label="除水量">
       </div>
 
       <div>
         <label for="height">身長(cm)</label>
-        <input id="height" aria-label="身長" type="number" step="0.1" min="0">
+        <input id="height" type="number" step="0.1" min="0" aria-label="身長">
       </div>
 
       <div>
         <label for="weightPre">透析前体重(kg)</label>
-        <input id="weightPre" aria-label="透析前体重" type="number" step="0.1" min="0">
+        <input id="weightPre" type="number" step="0.1" min="0" aria-label="透析前体重">
       </div>
 
       <div>
         <label for="weightPost">透析後体重(kg)</label>
-        <input id="weightPost" aria-label="透析後体重" type="number" step="0.1" min="0">
+        <input id="weightPost" type="number" step="0.1" min="0" aria-label="透析後体重">
       </div>
-
     </div>
 
     <h3 style="margin-top:18px;">NRI-JH</h3>
-
     <div class="grid">
       <div>
         <label for="BMI">BMI</label>
-        <input id="BMI" aria-label="BMI" type="number" step="0.1" min="0">
+        <input id="BMI" type="number" step="0.1" min="0" aria-label="BMI">
       </div>
 
       <div>
         <label for="NRIAlb">Alb（NRI-JH用）</label>
-        <input id="NRIAlb" aria-label="Alb for NRI" type="number" step="0.1" min="0">
+        <input id="NRIAlb" type="number" step="0.1" min="0" aria-label="Alb for NRI">
       </div>
 
       <div>
         <label for="Cr">Cr</label>
-        <input id="Cr" aria-label="Cr" type="number" step="0.1" min="0">
+        <input id="Cr" type="number" step="0.1" min="0" aria-label="Cr">
       </div>
 
       <div>
-        <label for="TCHO">総コレステロール (mg/dL)</label>
-        <input id="TCHO" aria-label="総コレステロール" type="number" step="1" min="0">
+        <label for="TCHO">総コレステロール</label>
+        <input id="TCHO" type="number" step="1" min="0" aria-label="総コレステロール">
       </div>
     </div>
 
@@ -179,7 +164,7 @@ textarea{ min-height:80px; }
 
     <div class="row-buttons">
       <button id="btnCalc" class="btn-primary" onclick="calc()">解析実行</button>
-      <button id="btnSend" class="btn-success" onclick="submitToGoogleForm()">スプレッドシートへ送信</button>
+      <button id="btnSend" class="btn-success" onclick="submitToGoogleFormOrdered()">スプレッドシートへ送信</button>
       <button class="btn-secondary" onclick="window.print()">A4印刷</button>
       <button class="btn-danger" onclick="clearForm()">入力クリア</button>
       <button class="btn-primary" onclick="loadHistory()">過去データ呼び出し</button>
@@ -198,19 +183,23 @@ textarea{ min-height:80px; }
 </div>
 
 <script>
-/* -------------------------
-   設定: Google フォーム情報
-   ------------------------- */
+/* ===========================
+   Googleフォーム連携設定（必ず確認してください）
+   - 下の ENTRY_MAP は、あなたが提示した URL に含まれていた entry.* を元に作成しています。
+   - フォームを編集すると entry ID が変わるため、実際のフォーム HTML（開発者ツール）で
+     name="entry.XXXXX" を確認し、必要ならここを更新してください。
+   =========================== */
 const GOOGLE_FORM_ACTION = "https://docs.google.com/forms/d/e/1FAIpQLSeY4hJIo8fqT__MURh4__OJCJJFC7OuAIN0m93NezKSxWwXhA/formResponse";
 
 /*
-  ENTRY_MAP: フォームの entry.* をここに正確にマッピングする
-  URL に含まれていた entry をすべて追加しています
-  （フォーム側で変更があればここを更新してください）
+  ENTRY_MAP: キー名 -> entry.XXXXX
+  ※ 必ずフォーム側の entry ID と照合してください（ここはサンプルマッピングです）。
 */
 const ENTRY_MAP = {
-  patientId: "entry.1408149842",
-  examDate: "entry.682524855",
+  // スプレッドシートヘッダ順に合わせたキー名
+  timestamp: null,                    // タイムスタンプ（フォーム側で自動付与されるため通常不要）
+  patientId: "entry.1408149842",     // 患者ID（記述式 必須）
+  examDate: "entry.682524855",       // 採血日（日時 必須）
   K: "entry.902839305",
   Ca: "entry.1282247271",
   Alb: "entry.553676846",
@@ -218,33 +207,69 @@ const ENTRY_MAP = {
   iPTH: "entry.828508291",
   Hb: "entry.1432055817",
   Fe: "entry.269083043",
-  // URL にあった追加の entry を識別子 extraX としてマップ
-  extra1: "entry.1563221666",
   TIBC: "entry.905449551",
   Ferritin: "entry.1043305105",
   BUNpre: "entry.1271587686",
   BUNpost: "entry.2051670408",
-  dialysisTime: "entry.1989053109",
-  UF: "entry.1017877093",
-  height: "entry.2020297135",
-  extra2: "entry.2120517553",
-  extra3: "entry.1346758513",
-  extra4: "entry.1014469604",
-  extra5: "entry.1879519402",
-  extra6: "entry.522730033",
-  extra7: "entry.1468863185",
-  weightPre: "entry.1596697131"
+  dialysisTime: "entry.1989053109",  // 透析時間 分
+  UF: "entry.1017877093",            // 除水量 kg
+  height: "entry.2020297135",        // 身長 cm
+  weightPre: "entry.1596697131",     // 透析前体重 kg
+  weightPost: "entry.2120517553",    // 透析後体重 kg
+  correctedCa: "entry.1346758513",   // 補正Ca
+  GNRI: "entry.1014469604",          // GNRI
+  spKtV: "entry.1879519402",         // spKt/V
+  nPCR: "entry.522730033",           // nPCR
+  saltEst: "entry.1468863185",       // 塩分推定（saltEst）
+  logicVersion: "entry.1563221666",  // 計算ロジックバージョン
+  ceComment: "entry.1563221666",     // CEコメント（段落） ← 要確認：フォームの実際の entry を確認して重複を避けてください
+  nriJH: "entry.1596697131"          // NRI-JH ← 要確認：ID が weightPre と重複している可能性があるため確認してください
 };
 
-/* -------------------------
+/*
+  ENTRY_ORDER: スプレッドシートの列順（ヘッダ行）に合わせたキー配列
+  この順序で必ず全フィールド（空欄も含む）を送信します。
+  ヘッダと完全一致させてください。
+*/
+const ENTRY_ORDER = [
+  "timestamp",
+  "patientId",
+  "examDate",
+  "K",
+  "Ca",
+  "Alb",
+  "P",
+  "iPTH",
+  "Hb",
+  "Fe",
+  "TIBC",
+  "Ferritin",
+  "BUNpre",
+  "BUNpost",
+  "dialysisTime",
+  "UF",
+  "height",
+  "weightPre",
+  "weightPost",
+  "correctedCa",
+  "GNRI",
+  "spKtV",
+  "nPCR",
+  "saltEst",
+  "logicVersion",
+  "ceComment",
+  "nriJH"
+];
+
+/* ===========================
    ユーティリティ
-   ------------------------- */
+   =========================== */
 function el(id){ return document.getElementById(id); }
 
 function getNumValue(id){
-  const elv = document.getElementById(id);
-  if(!elv) return null;
-  const v = elv.value;
+  const e = el(id);
+  if(!e) return null;
+  const v = e.value;
   if(v === "" || v == null) return null;
   const n = parseFloat(String(v).replace(/,/g,''));
   return Number.isFinite(n) ? n : null;
@@ -258,7 +283,6 @@ function escapeHtml(s){
   return String(s || "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
 }
 
-/* 判定ロジック */
 function judgeValue(v, min, max){
   if(v == null) return "";
   if(min != null && v < min) return "warn";
@@ -278,11 +302,10 @@ function row(name, val, target, min, max){
 </tr>`;
 }
 
-/* -------------------------
+/* ===========================
    解析関数 calc
-   ------------------------- */
+   =========================== */
 function calc(){
-  // 入力取得
   const K = getNumValue("K");
   const Ca = getNumValue("Ca");
   const Alb = getNumValue("Alb");
@@ -385,18 +408,17 @@ function calc(){
   el("results").style.display = "block";
 }
 
-/* -------------------------
-   Google フォーム送信（hidden iframe を使用）
-   - ENTRY_MAP のキー名に対応する input が存在すればその値を送る
-   - 二重送信防止、完了検知のフォールバックあり
-   ------------------------- */
+/* ===========================
+   Googleフォーム送信（順序固定・空欄も送る）
+   - ENTRY_MAP と ENTRY_ORDER をフォームの実際の entry ID に合わせて必ず確認してください
+   - hidden iframe を使い、二重送信防止とフォールバックを実装
+   =========================== */
 let isSubmitting = false;
 
-function submitToGoogleForm(){
+function submitToGoogleFormOrdered(){
   if(isSubmitting) return;
   isSubmitting = true;
   el("status").textContent = "送信中...";
-  // ボタン無効化
   const btn = el("btnSend");
   if(btn) btn.disabled = true;
 
@@ -405,13 +427,17 @@ function submitToGoogleForm(){
   form.action = GOOGLE_FORM_ACTION;
   form.target = "hidden_iframe";
 
-  // フィールド追加
-  Object.keys(ENTRY_MAP).forEach(key => {
-    const entryKey = ENTRY_MAP[key];
+  // ENTRY_ORDER の順で必ず全フィールドを追加（値が無ければ空文字）
+  ENTRY_ORDER.forEach(key => {
+    const entryName = ENTRY_MAP[key];
+    if(!entryName) {
+      // timestamp 等、フォーム側で自動付与される項目は送信しない
+      return;
+    }
     const input = document.createElement("input");
     input.type = "hidden";
-    input.name = entryKey;
-    // マップのキーが実際の input id と一致する場合はその値を使う
+    input.name = entryName;
+    // 送る値は、ページ上の id と同じキー名を参照する設計
     const sourceEl = el(key);
     input.value = sourceEl ? (sourceEl.value || "") : "";
     form.appendChild(input);
@@ -439,17 +465,12 @@ function submitToGoogleForm(){
     el("status").innerHTML = ok ? "<span class='ok'>送信完了</span>" : "<span class='warn'>送信失敗</span>";
   }
 
-  // onload で完了判定（ただしクロスオリジンで確実ではない）
-  iframe.onload = function(){
-    finish(true);
-  };
+  // onload で完了判定（クロスオリジンで確実ではないためフォールバックあり）
+  iframe.onload = function(){ finish(true); };
 
   // フォールバック：10秒後に完了扱い
-  const fallbackTimer = setTimeout(() => {
-    finish(true);
-  }, 10000);
+  const fallbackTimer = setTimeout(() => { finish(true); }, 10000);
 
-  // 送信
   try{
     form.submit();
   }catch(e){
@@ -458,9 +479,9 @@ function submitToGoogleForm(){
   }
 }
 
-/* -------------------------
+/* ===========================
    その他ユーティリティ
-   ------------------------- */
+   =========================== */
 function clearForm(){
   if(!confirm("入力をクリアしますか？")) return;
   document.querySelectorAll("input,textarea,select").forEach(e => {
